@@ -1,0 +1,107 @@
+.wrapper {
+    display: flex;
+    padding: 20px 0;
+    justify-content: space-around;
+    border-bottom: 1px solid rgba(22, 24, 35, 0.05);
+    margin: 0 16px;
+}
+
+.container {
+    display: flex;
+}
+
+.avatar {
+    height: 56px;
+    width: 56px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 4px;
+}
+
+.info {
+    margin-left: 12px;
+}
+
+.username {
+    font-weight: 700;
+    font-size: 1.8rem;
+    line-height: 2.5rem;
+    display: inline-block;
+    margin-right: 4px;
+}
+
+.name {
+    font-weight: 400;
+    font-size: 1.4rem;
+    display: inline-block;
+    line-height: 2.8rem;
+}
+
+.caption {
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 2.2rem;
+}
+
+.content {
+    display: flex;
+}
+
+.video {
+    border-radius: 15px;
+    display: block;
+    width: 289.33px;
+    height: 516.66px;
+    object-fit: cover;
+}
+
+.icon-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    margin-left: 20px;
+    align-items: center;
+}
+
+.wrap-icon {
+    background-color: #f1f1f2;
+    height: 48px;
+    width: 48px;
+    border-radius: 50%;
+    margin: 8px 0 6px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 8;
+    cursor: pointer;
+}
+
+.icon {
+    font-size: 2.8rem;
+}
+
+.quantity {
+    color: rgba(22, 24, 35, 0.75);
+    font-weight: 700;
+    font-size: 1.6rem;
+    line-height: 1.7rem;
+    text-align: center;
+}
+
+.stateHeart {
+    color: var(--primary);
+}
+
+.btn-follow {
+    width: 54px;
+}
+
+.follow {
+    border-color: var(--black);
+    color: var(--black);
+
+    &:hover {
+        border-color: rgb(208, 209, 211);
+        background-color: rgb(248, 248, 248);
+    }
+}

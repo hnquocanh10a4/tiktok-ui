@@ -1,0 +1,13 @@
+.wrapper {
+    width: 356px;
+    position: fixed;
+    // top: 50;
+    // left:0;
+    // display: inline-block;
+    background-color: var(--white);
+    z-index: 10;
+}
+
+.separate {
+    border-top: 1px solid rgba(22, 24, 35, 0.05);
+}

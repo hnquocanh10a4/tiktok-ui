@@ -15,7 +15,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 
-import routesConfig from '~/config/routes';
+import config from '~/config';
 import Button from '~/components/Button';
 import images from '~/assets/images';
 import Menu from '~/components/Popper/Menu';
@@ -89,7 +89,7 @@ function Header() {
     return (
         <header className={cx('wrapper')}>
             <div className={cx('inner')}>
-                <Link to={routesConfig.home} className={cx('logo-link')}>
+                <Link to={config.routes.home} className={cx('logo-link')}>
                     <img src={images.logo} alt="tiktok"></img>
                 </Link>
                 {/* search */}
@@ -126,7 +126,7 @@ function Header() {
                             <Image
                                 className={cx('userAvatar')}
                                 src="https://atomiks.github.io/tippyjs/static/logo-ebc385458e03fdb24af078536af88065.svg"
-                                alt="a"
+                                alt="avatar"
                             />
                         ) : (
                             <button className={cx('more-btn')}>
