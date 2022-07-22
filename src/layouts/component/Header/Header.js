@@ -58,6 +58,7 @@ const MENU_ITEM = [
     },
 ];
 
+// state true logined, false login failed
 const currentUser = true;
 
 function Header() {
@@ -65,23 +66,26 @@ function Header() {
         {
             icon: <FontAwesomeIcon icon={faUser} />,
             title: 'View profile',
-            to: '/hoaa',
+            to: '/@hoaahanassii',
         },
         {
             icon: <FontAwesomeIcon icon={faCoins} />,
             title: 'Get coins',
-            to: '/coin',
+            // to: '/coin',
+            to: '/',
         },
         {
             icon: <FontAwesomeIcon icon={faGear} />,
             title: 'Settings',
-            to: '/settings',
+            // to: '/settings',
+            to: '/',
         },
         ...MENU_ITEM,
         {
             icon: <FontAwesomeIcon icon={faSignOut} />,
             title: 'Log out',
-            to: '/logout',
+            // to: '/logout',
+            to: '/',
             separate: true,
         },
     ];
@@ -116,16 +120,14 @@ function Header() {
                     ) : (
                         <>
                             <Button text>Upload</Button>
-                            <Button rounded outline>
-                                Log in
-                            </Button>
+                            <Button primary>Log in</Button>
                         </>
                     )}
                     <Menu items={currentUser ? useMenu : MENU_ITEM}>
                         {currentUser ? (
                             <Image
                                 className={cx('userAvatar')}
-                                src="https://atomiks.github.io/tippyjs/static/logo-ebc385458e03fdb24af078536af88065.svg"
+                                src="https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg"
                                 alt="avatar"
                             />
                         ) : (

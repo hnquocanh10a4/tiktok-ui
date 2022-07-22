@@ -29,7 +29,7 @@ function Sidebar() {
         featchApi();
     }, []);
 
-    console.log(suggestAccount);
+    // console.log(suggestAccount);
     return (
         <aside className={cx('wrapper')}>
             <Menu>
@@ -43,8 +43,9 @@ function Sidebar() {
                 <MenuItem title="LIVE" to={config.routes.live} icon={<LiveIcon />} activeIcon={<LiveActiveIcon />} />
                 <div className={cx('separate')}>
                     <h4>Suggested accounts</h4>
+
                     {suggestAccount.map((item) => {
-                        return <AccountItem key={item.id} data={item} />;
+                        return <AccountItem key={item.id} data={item} showInfo={true} />;
                     })}
                 </div>
             </Menu>

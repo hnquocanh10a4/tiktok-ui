@@ -49,7 +49,14 @@ function Search() {
                 visible={searchResult.length > 0 && showResult}
                 interactive={true}
                 render={(attrs) => (
-                    <div className={cx('search-result')} tabIndex="-1" {...attrs}>
+                    <div
+                        className={cx('search-result')}
+                        tabIndex="-1"
+                        {...attrs}
+                        onClick={() => {
+                            setShowResult(false);
+                        }}
+                    >
                         <PopperWrapper>
                             <h4 className={cx('search-title')}>Accounts</h4>
                             {searchResult.map((item) => (

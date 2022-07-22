@@ -2,7 +2,7 @@
     display: flex;
     padding: 20px 0;
     justify-content: space-around;
-    border-bottom: 1px solid rgba(22, 24, 35, 0.05);
+    border-bottom: 1px solid rgba(22, 24, 35, 0.2);
     margin: 0 16px;
 }
 
@@ -47,12 +47,95 @@
     display: flex;
 }
 
+.video-player {
+    position: relative;
+
+    &:hover {
+        > .play-btn {
+            display: block;
+        }
+    }
+}
+
 .video {
     border-radius: 15px;
     display: block;
     width: 289.33px;
     height: 516.66px;
     object-fit: cover;
+    margin: 20px 0 11px 0;
+}
+
+.play-btn {
+    height: 24px;
+    width: 24px;
+    position: absolute;
+    left: 18px;
+    bottom: 36px;
+    color: #fff;
+    display: none;
+}
+
+.mute-btn {
+    height: 24px;
+    width: 24px;
+    position: absolute;
+    right: 18px;
+    bottom: 36px;
+    color: #fff;
+
+    &:hover {
+        ~ .input-range {
+            display: block;
+        }
+    }
+}
+.input-range {
+    display: none;
+    -webkit-appearance: none;
+    height: 2px;
+    width: 48px;
+    transform: rotate(-90deg);
+    position: absolute;
+    right: 6px;
+    bottom: 90px;
+    color: #fff;
+
+    &::after {
+        content: '';
+        display: block;
+        background-color: transparent;
+        position: absolute;
+        right: 0px;
+        top: -15px;
+        height: 40px;
+        width: 90px;
+    }
+
+    &:hover {
+        display: block;
+    }
+}
+
+.input-range {
+    &::-webkit-slider-runnable-track {
+        background-color: var(--wthite);
+        height: 2px;
+        text-align: center;
+    }
+}
+
+.input-range {
+    &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        transform: translateY(-6px);
+        background-color: #ecf0f1;
+        border: 1px solid #bdc3c7;
+        width: 14px;
+        height: 14px;
+        border-radius: 10px;
+        cursor: pointer;
+    }
 }
 
 .icon-group {
@@ -90,6 +173,21 @@
 
 .stateHeart {
     color: var(--primary);
+    animation: zoomIn 0.5s linear;
+}
+
+@keyframes zoomIn {
+    0% {
+        transform: scale(1.5);
+    }
+
+    50% {
+        transform: scale(0.7);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 .btn-follow {

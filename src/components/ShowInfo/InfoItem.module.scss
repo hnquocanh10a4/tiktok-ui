@@ -1,0 +1,62 @@
+.wrapper {
+    padding: 0 20px 20px 20px;
+}
+.wrap-img {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: black;
+}
+
+.image {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: inline-block;
+}
+
+.btn-follow {
+    width: 106px;
+    height: 34px;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+}
+
+.username {
+    color: rgb(22, 24, 35);
+    font-weight: 700;
+    font-size: 1.8rem;
+    line-height: 2.2rem;
+}
+
+.check {
+    margin-left: 6px;
+    color: rgb(32, 213, 236);
+}
+
+.name {
+    color: rgb(22, 24, 35);
+    font-weight: 500;
+    font-size: 1.4rem;
+    line-height: 2rem;
+}
+
+.count-num {
+    font-weight: 700;
+    margin-right: 6px;
+    font-size: 1.7rem;
+    line-height: 2rem;
+    display: inline-block;
+}
+
+.count-letter {
+    color: rgba(22, 24, 35, 0.75);
+    font-size: 1.7rem;
+    line-height: 2rem;
+    display: inline-block;
+    font-weight: 500;
+}

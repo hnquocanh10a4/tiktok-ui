@@ -4,19 +4,37 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from '~/components/AccountItem/AccountItem.module.scss';
+import ShowInfo from '~/components/ShowInfo';
 
 const cx = classNames.bind(styles);
 
-function AccountItem({ data }) {
+function AccountItem({ data, showInfo = false }) {
+    if (showInfo) {
+        return (
+            <ShowInfo data={data}>
+                <Link to={`/@${data.nickname}`} className={cx('wrapper')}>
+                    <img className={cx('avatar')} src={data.avatar} alt={data.nickname} />
+                    <div className={cx('info')}>
+                        <p className={cx('username')}>
+                            <span>{data.nickname}</span>
+                            {data.tick && <FontAwesomeIcon className={cx('check')} icon={faCheckCircle} />}
+                        </p>
+                        <span className={cx('name')}>{data.full_name}</span>
+                    </div>
+                </Link>
+            </ShowInfo>
+        );
+    }
+
     return (
-        <Link to={`@${data.nickname}`} className={cx('wrapper')}>
+        <Link to={`/@${data.nickname}`} className={cx('wrapper')}>
             <img className={cx('avatar')} src={data.avatar} alt={data.nickname} />
             <div className={cx('info')}>
-                <p className={cx('name')}>
-                    <span>{data.full_name}</span>
+                <p className={cx('username')}>
+                    <span>{data.nickname}</span>
                     {data.tick && <FontAwesomeIcon className={cx('check')} icon={faCheckCircle} />}
                 </p>
-                <span className={cx('username')}>{data.nickname}</span>
+                <span className={cx('name')}>{data.full_name}</span>
             </div>
         </Link>
     );

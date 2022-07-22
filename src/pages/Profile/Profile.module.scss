@@ -1,0 +1,196 @@
+.wrapper {
+    margin-top: 30px;
+    margin-left: 356px;
+}
+
+.image-wrapper {
+    display: flex;
+}
+
+.image {
+    height: 116px;
+    width: 116px;
+    border-radius: 50%;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+}
+
+.username {
+    // font-family: SofiaPro, Arial, Tahoma, PingFangSC, sans-serif;
+    font-weight: 700;
+    font-size: 3.2rem;
+    line-height: 3.8rem;
+    padding-bottom: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+}
+
+.check {
+    font-size: 2.3rem;
+    margin-left: 6px;
+    color: rgb(32, 213, 236);
+}
+
+.name {
+    font-weight: 600;
+    font-size: 1.8rem;
+    line-height: 2.5rem;
+    text-overflow: ellipsis;
+    height: 25px;
+    overflow: hidden;
+    max-width: 450px;
+    white-space: nowrap;
+}
+.btn-follow {
+    width: 208px;
+    height: 36px;
+    margin-top: 12px;
+}
+
+.follow-wrapper {
+    margin-top: 22px;
+}
+
+.count-num {
+    font-family: SofiaPro, Arial, Tahoma, PingFangSC, sans-serif;
+    font-weight: 600;
+    font-size: 1.8rem;
+    line-height: 2.5px;
+}
+
+.count-letter {
+    font-family: ProximaNova, Arial, Tahoma, PingFangSC, sans-serif;
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 2.2rem;
+    display: inline-block;
+    margin-left: 6px;
+    margin-right: 20px;
+}
+
+.bio {
+    text-align: left;
+    font-family: ProximaNova, Arial, Tahoma, PingFangSC, sans-serif;
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 2.2rem;
+    color: rgba(18, 18, 18, 1);
+    white-space: pre-line;
+    margin-top: 10px;
+}
+
+.video-tab {
+    display: flex;
+    position: relative;
+}
+
+.video-tab-title,
+.like-tab-title {
+    font-family: SofiaPro, Arial, Tahoma, PingFangSC, sans-serif;
+    font-weight: 600;
+    font-size: 1.8rem;
+    line-height: 2.5rem;
+    display: inline-block;
+    height: 44px;
+    width: 230px;
+    text-align: center;
+    color: rgba(18, 18, 18, 0.5);
+}
+
+.like-tab-title {
+    &:hover {
+        ~ .video-tab-scroll {
+            transform: translateX(230px);
+            animation: moveTabRight 0.3s linear;
+        }
+    }
+}
+
+.video-tab-title {
+    &:hover {
+        ~ .video-tab-scroll {
+            transform: translateX(0);
+            animation: moveTabLeft 0.3s linear;
+        }
+    }
+}
+
+.activeVideo,
+.activeLike {
+    color: rgb(18, 18, 18);
+}
+
+.activeVideo {
+    ~ .video-tab-scroll {
+        transform: translateX(0);
+    }
+}
+
+.activeLike {
+    ~ .video-tab-scroll {
+        transform: translateX(230px);
+    }
+}
+
+.video-tab-scroll {
+    position: absolute;
+    width: 230px;
+    height: 2.5px;
+    background: rgba(22, 24, 35, 1);
+    left: 0;
+    bottom: 0;
+}
+
+@keyframes moveTabRight {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(230px);
+    }
+}
+
+@keyframes moveTabLeft {
+    from {
+        transform: translateX(230px);
+    }
+    to {
+        transform: translateX(0px);
+    }
+}
+
+.content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 380px;
+}
+
+.video-icon {
+    font-size: 9rem;
+    color: #b0b0b4;
+}
+
+.like-title {
+    font-size: 2.4rem;
+    line-height: 2.8rem;
+    font-family: SofiaPro, Arial, Tahoma, PingFangSC, sans-serif;
+    font-weight: 700;
+    color: rgb(22, 24, 35);
+    margin-top: 24px;
+}
+
+.like-des {
+    font-size: 1.6rem;
+    line-height: 2.2rem;
+    font-family: ProximaNova, Arial, Tahoma, PingFangSC, sans-serif;
+    font-weight: 400;
+    color: rgba(22, 24, 35, 0.75);
+    margin-top: 8px;
+}

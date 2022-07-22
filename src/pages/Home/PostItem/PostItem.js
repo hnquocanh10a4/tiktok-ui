@@ -1,19 +1,46 @@
-import { faCommentDots, faHeart, faShare } from '@fortawesome/free-solid-svg-icons';
+import {
+    faCommentDots,
+    faHeart,
+    faPause,
+    faPlay,
+    faShare,
+    faVolumeHigh,
+    faVolumeXmark,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 
 import styles from './PostItem.module.scss';
 import classNames from 'classnames/bind';
 import Button from '~/components/Button';
-import { useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 const cx = classNames.bind(styles);
 
 function PostItem({ data }) {
     const [stateHeart, setStateHeart] = useState(false);
     const [follow, setFollow] = useState(false);
+    const [isPlay, setIsPlay] = useState(true);
+    const [isMuted, setIsMuted] = useState(true);
+    // custom video controls
+    const video = useRef();
 
-    // let classes = cx('wrap-icon', { heart });
+    useEffect(() => {
+        // console.log(video.current);
+        video.current.muted = false;
+        setIsPlay(video.current.paused);
+        setIsMuted(false);
+    }, []);
+
+    const handlePlay = () => {
+        video.current.play();
+        setIsPlay(false);
+    };
+
+    const handlePause = () => {
+        video.current.pause();
+        setIsPlay(true);
+    };
 
     return (
         <div className={cx('wrapper')}>
@@ -26,10 +53,78 @@ function PostItem({ data }) {
                     </div>
                     <span className={cx('caption')}>{data.caption}</span>
                     <div className={cx('content')}>
-                        <video className={cx('video')} loop muted autoPlay controls>
-                            <source src={data.video} type="video/mp4" />
-                            Your browser does not support the video tag.
-                        </video>
+                        <div className={cx('video-player')}>
+                            <video
+                                ref={video}
+                                className={cx('video')}
+                                src={data.video}
+                                type="video/mp4"
+                                loop
+                                onClick={() => {
+                                    if (video.current.paused) {
+                                        handlePlay();
+                                    } else {
+                                        handlePause();
+                                    }
+                                }}
+                            ></video>
+                            {/* check video is play ? and set onClick to toggle between play and pause */}
+                            {isPlay ? (
+                                <FontAwesomeIcon
+                                    className={cx('play-btn')}
+                                    icon={faPlay}
+                                    onClick={() => {
+                                        handlePlay();
+                                    }}
+                                />
+                            ) : (
+                                <FontAwesomeIcon
+                                    icon={faPause}
+                                    className={cx('play-btn')}
+                                    onClick={() => {
+                                        handlePause();
+                                    }}
+                                />
+                            )}
+                            {/* check video is muted ? and set onClick to toggle between muted and play */}
+
+                            {isMuted ? (
+                                <FontAwesomeIcon
+                                    className={cx('mute-btn')}
+                                    icon={faVolumeXmark}
+                                    onClick={() => {
+                                        video.current.muted = false;
+                                        setIsMuted(false);
+                                    }}
+                                />
+                            ) : (
+                                <FontAwesomeIcon
+                                    className={cx('mute-btn')}
+                                    icon={faVolumeHigh}
+                                    onClick={() => {
+                                        video.current.muted = true;
+                                        setIsMuted(true);
+                                    }}
+                                />
+                            )}
+                            <input
+                                className={cx('input-range')}
+                                type="range"
+                                min="0"
+                                max="1"
+                                // value={volume}
+                                step="0.01"
+                                onMouseMove={(e) => {
+                                    // eslint-disable-next-line eqeqeq
+                                    if (e.target.value == 0) {
+                                        setIsMuted(true);
+                                    } else {
+                                        setIsMuted(false);
+                                    }
+                                    video.current.volume = e.target.value;
+                                }}
+                            />
+                        </div>
                         <div className={cx('icon-group')}>
                             <button className={cx('wrap-icon')}>
                                 <FontAwesomeIcon
