@@ -43,8 +43,7 @@ function Sidebar() {
                 <MenuItem title="LIVE" to={config.routes.live} icon={<LiveIcon />} activeIcon={<LiveActiveIcon />} />
                 <div className={cx('separate')}>
                     <h4>Suggested accounts</h4>
-
-                    {suggestAccount.map((item) => {
+                    {suggestAccount?.map((item) => {
                         return <AccountItem key={item.id} data={item} showInfo={true} />;
                     })}
                 </div>
