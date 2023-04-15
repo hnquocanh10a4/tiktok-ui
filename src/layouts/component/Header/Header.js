@@ -22,6 +22,7 @@ import Menu from '~/components/Popper/Menu';
 import { InboxIcon, MessageIcon, UploadIcon } from '~/components/Icon';
 import Image from '~/components/Image';
 import Search from '~/components/Search';
+import PopUp from '~/components/PopUp/PopUp';
 
 const cx = classNames.bind(styles);
 
@@ -92,6 +93,7 @@ function Header() {
 
     return (
         <header className={cx('wrapper')}>
+            <PopUp />
             <div className={cx('inner')}>
                 <Link to={config.routes.home} className={cx('logo-link')}>
                     <img src={images.logo} alt="tiktok"></img>
