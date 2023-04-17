@@ -6,18 +6,23 @@ import { Wrapper as PopperWrapper } from '~/components/Popper';
 import AccountItem from '~/components/AccountItem';
 import { SearchIcon } from '~/components/Icon';
 import { useDebounce } from '~/hooks';
+import { useSelector, useDispatch } from 'react-redux';
 
-import * as searchService from '~/services/searchService';
 import classNames from 'classnames/bind';
 import styles from './Search.module.scss';
+import { searchLoadingSelector, searchResultSelector } from '~/redux/selectors';
+import searchSlice, { search } from './searchSlice';
 
 const cx = classNames.bind(styles);
 
 function Search() {
-    const [searchResult, setSearchResult] = useState([]);
     const [searchValue, setSearchValue] = useState('');
     const [showResult, setShowResult] = useState(true);
-    const [showLoading, setShowLoading] = useState(false);
+
+    const searchResult = useSelector(searchResultSelector);
+    const showLoading = useSelector(searchLoadingSelector);
+
+    const dispatch = useDispatch();
 
     const debouncedValue = useDebounce(searchValue, 500);
 
@@ -25,17 +30,11 @@ function Search() {
 
     useEffect(() => {
         if (!debouncedValue.trim()) {
-            setSearchResult([]);
+            dispatch(searchSlice.actions.clearSearchResults());
             return;
         }
 
-        const featchApi = async () => {
-            setShowLoading(true);
-            const result = await searchService.search(debouncedValue);
-            setSearchResult(result);
-            setShowLoading(false);
-        };
-        featchApi();
+        dispatch(search(debouncedValue));
     }, [debouncedValue]);
 
     const handleShowResult = () => {
@@ -45,6 +44,7 @@ function Search() {
         // Using a wrapper <div> tag around the reference element solves
         // this by creating a new parentNode context.
         <div>
+            {/* search result tab  */}
             <HeadlessTippy
                 visible={searchResult.length > 0 && showResult}
                 interactive={true}
@@ -89,7 +89,7 @@ function Search() {
                             onClick={() => {
                                 setSearchValue('');
                                 inputRef.current.focus();
-                                setSearchResult([]);
+                                searchSlice.actions.clearSearchResults();
                             }}
                         >
                             <FontAwesomeIcon icon={faCircleXmark} />

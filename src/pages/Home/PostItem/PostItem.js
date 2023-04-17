@@ -14,6 +14,7 @@ import styles from './PostItem.module.scss';
 import classNames from 'classnames/bind';
 import Button from '~/components/Button';
 import { useRef, useState, useEffect } from 'react';
+import Image from '~/components/Image/Image';
 
 const cx = classNames.bind(styles);
 
@@ -45,19 +46,21 @@ function PostItem({ data }) {
     return (
         <div className={cx('wrapper')}>
             <div className={cx('container')}>
-                <img src={data.avatar} alt={data.username} className={cx('avatar')} />
+                <Image src={data.user.avatar} alt={data.user.nickname} className={cx('avatar')} />
                 <div className={cx('info')}>
                     <div>
-                        <span className={cx('username')}>{data.username}</span>
-                        <span className={cx('name')}>{data.name}</span>
+                        <span className={cx('username')}>{data.user.nickname}</span>
+                        <span className={cx('name')}>
+                            {data.user.first_name} {data.user.last_name}
+                        </span>
                     </div>
-                    <span className={cx('caption')}>{data.caption}</span>
+                    <span className={cx('caption')}>{data.description}</span>
                     <div className={cx('content')}>
                         <div className={cx('video-player')}>
                             <video
                                 ref={video}
                                 className={cx('video')}
-                                src={data.video}
+                                src={data.file_url}
                                 type="video/mp4"
                                 loop
                                 onClick={() => {
@@ -135,15 +138,15 @@ function PostItem({ data }) {
                                     }}
                                 />
                             </button>
-                            {/* <span className={cx('quantity')}>{data.likes}</span> */}
+                            <span className={cx('quantity')}>{data.likes_count}</span>
                             <button className={cx('wrap-icon')}>
                                 <FontAwesomeIcon icon={faCommentDots} className={cx('icon')} />
                             </button>
-                            {/* <span className={cx('quantity')}>{data.comments}</span> */}
+                            <span className={cx('quantity')}>{data.comments_count}</span>
                             <button className={cx('wrap-icon')}>
                                 <FontAwesomeIcon icon={faShare} className={cx('icon')} />
                             </button>
-                            {/* <span className={cx('quantity')}>{data.share}</span> */}
+                            <span className={cx('quantity')}>{data.shares_count}</span>
                         </div>
                     </div>
                 </div>

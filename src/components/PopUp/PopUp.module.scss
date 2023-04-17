@@ -16,11 +16,13 @@
     background-color: var(--white);
     z-index: 30;
     border-radius: 5px;
-    text-align: right;
-
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     .close-btn {
         font-size: 3rem;
         color: var(--text);
         padding: 8px;
+        align-self: flex-end;
     }
 }

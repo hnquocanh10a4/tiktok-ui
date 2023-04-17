@@ -14,20 +14,31 @@ import { useState, useEffect } from 'react';
 import config from '~/config';
 import * as searchService from '~/services/searchService';
 import AccountItem from '~/components/AccountItem';
+import { useDispatch, useSelector } from 'react-redux';
+import { getSuggesedUserSelector } from '~/redux/selectors';
+import { getSuggesedUser } from './sideBarSlice';
+import Button from '~/components/Button/Button';
 
 const cx = classNames.bind(styles);
 
 function Sidebar() {
-    const [suggestAccount, setSuggestAccount] = useState([]);
+    // const [suggestAccount, setSuggestAccount] = useState([]);
+    const [quantity, setQuantity] = useState(5);
+    console.log(quantity);
+
+    const dispatch = useDispatch();
+
+    const suggestAccount = useSelector(getSuggesedUserSelector);
 
     useEffect(() => {
-        const featchApi = async () => {
-            const result = await searchService.suggestAccount();
-            // console.log(result);
-            setSuggestAccount(result);
-        };
-        featchApi();
-    }, []);
+        // const featchApi = async () => {
+        //     const result = await searchService.suggestAccount();
+        //     // console.log(result);
+        //     setSuggestAccount(result);
+        // };
+        // featchApi();
+        dispatch(getSuggesedUser(quantity));
+    }, [quantity]);
 
     // console.log(suggestAccount);
     return (
@@ -46,6 +57,18 @@ function Sidebar() {
                     {suggestAccount?.map((item) => {
                         return <AccountItem key={item.id} data={item} showInfo={true} />;
                     })}
+                    {quantity === 20 ? (
+                        ''
+                    ) : (
+                        <Button
+                            className={cx('more-btn')}
+                            onClick={() => {
+                                setQuantity(20);
+                            }}
+                        >
+                            Xem tất cả ...
+                        </Button>
+                    )}
                 </div>
             </Menu>
         </aside>

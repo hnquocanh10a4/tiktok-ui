@@ -7,8 +7,17 @@
     background-color: var(--white);
     z-index: 8;
     margin-top: 20px;
+    overflow-y: hidden;
+    height: 625px;
+    &:hover {
+        overflow-y: auto;
+    }
 }
 
 .separate {
     border-top: 1px solid rgba(22, 24, 35, 0.05);
+}
+
+.more-btn {
+    color: var(--primary);
 }
