@@ -15,6 +15,7 @@ import classNames from 'classnames/bind';
 import Button from '~/components/Button';
 import { useRef, useState, useEffect } from 'react';
 import Image from '~/components/Image/Image';
+import useElementOnScreen from '~/hooks/useElementOnScreen';
 
 const cx = classNames.bind(styles);
 
@@ -22,16 +23,41 @@ function PostItem({ data }) {
     const [stateHeart, setStateHeart] = useState(false);
     const [follow, setFollow] = useState(false);
     const [isPlay, setIsPlay] = useState(true);
-    const [isMuted, setIsMuted] = useState(true);
+    const [isMuted, setIsMuted] = useState(false);
+
+    const options = { root: null, rootMargin: '0px', threshold: 0.7 };
+    // const videoRef = useRef(null);
+    const video = useRef(null);
+    // video.current.play();
+    const isVisible = useElementOnScreen(options, video);
+    const [playing, setPlaying] = useState(false);
+
     // custom video controls
-    const video = useRef();
+
+    // useEffect(() => {
+    //     // console.log(video.current);
+    //     video.current.muted = false;
+    //     setIsPlay(video.current.paused);
+    //     setIsMuted(false);
+    // }, []);
 
     useEffect(() => {
-        // console.log(video.current);
-        video.current.muted = false;
-        setIsPlay(video.current.paused);
-        setIsMuted(false);
-    }, []);
+        if (isVisible) {
+            if (!playing) {
+                // Rewind the video and play from beginning
+                video.current.currentTime = 0;
+                video.current.play();
+                setPlaying(true);
+                setIsPlay(false);
+            }
+        } else {
+            if (playing) {
+                video.current.pause();
+                setPlaying(false);
+                setIsPlay(true);
+            }
+        }
+    }, [isVisible, playing]);
 
     const handlePlay = () => {
         video.current.play();
@@ -63,6 +89,8 @@ function PostItem({ data }) {
                                 src={data.file_url}
                                 type="video/mp4"
                                 loop
+                                playsInline
+                                poster={data.thumb_url}
                                 onClick={() => {
                                     if (video.current.paused) {
                                         handlePlay();

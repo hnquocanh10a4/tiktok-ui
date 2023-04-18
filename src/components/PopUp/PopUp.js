@@ -3,25 +3,29 @@ import styles from './PopUp.module.scss';
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark } from '@fortawesome/free-regular-svg-icons';
-import SignIn from './SignIn/SignIn';
+import { useSelector, useDispatch } from 'react-redux';
+import authenticationSlice from './authenticationSlice';
+import { getLoginFormSelector } from '~/redux/selectors';
 
 const cx = classNames.bind(styles);
 
-export default function PopUp() {
-    const [hidden, setHidden] = useState();
+export default function PopUp({ children }) {
+    const stateLoginForm = useSelector(getLoginFormSelector);
+
+    const dispatch = useDispatch();
 
     return (
-        <div hidden={hidden}>
+        <div hidden={!stateLoginForm}>
             <div className={cx('overlay')}></div>
             <div className={cx('content')}>
                 <FontAwesomeIcon
                     onClick={() => {
-                        setHidden(true);
+                        dispatch(authenticationSlice.actions.closeLoginForm());
                     }}
                     className={cx('close-btn')}
                     icon={faCircleXmark}
                 />
-                <SignIn />
+                {children}
             </div>
         </div>
     );

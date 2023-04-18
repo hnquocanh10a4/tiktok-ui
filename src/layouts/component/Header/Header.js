@@ -14,6 +14,7 @@ import {
     faUser,
 } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 
 import config from '~/config';
 import Button from '~/components/Button';
@@ -22,7 +23,8 @@ import Menu from '~/components/Popper/Menu';
 import { InboxIcon, MessageIcon, UploadIcon } from '~/components/Icon';
 import Image from '~/components/Image';
 import Search from '~/components/Search';
-import PopUp from '~/components/PopUp/PopUp';
+import authenticationSlice from '~/components/PopUp/authenticationSlice';
+import { getCurrentUserSelector } from '~/redux/selectors';
 
 const cx = classNames.bind(styles);
 
@@ -60,9 +62,20 @@ const MENU_ITEM = [
 ];
 
 // state true logined, false login failed
-const currentUser = true;
+// const currentUser = false;
 
 function Header() {
+    // const [currentUser, setCurrentUser] = useState(false);
+    const currentUser = useSelector(getCurrentUserSelector);
+    console.log('currentUser', Object.keys(currentUser)?.length !== 0);
+    const dispatch = useDispatch();
+
+    // if (Object.keys(user).length === 0) {
+    //     setCurrentUser(false);
+    // } else {
+    //     setCurrentUser(true);
+    // }
+
     const useMenu = [
         {
             icon: <FontAwesomeIcon icon={faUser} />,
@@ -91,9 +104,12 @@ function Header() {
         },
     ];
 
+    const handleOpenLogin = () => {
+        dispatch(authenticationSlice.actions.openLoginForm());
+    };
+
     return (
         <header className={cx('wrapper')}>
-            {/* <PopUp /> */}
             <div className={cx('inner')}>
                 <Link to={config.routes.home} className={cx('logo-link')}>
                     <img src={images.logo} alt="tiktok"></img>
@@ -101,7 +117,7 @@ function Header() {
                 {/* search */}
                 <Search />
                 <div className={cx('action')}>
-                    {currentUser ? (
+                    {Object.keys(currentUser)?.length !== 0 ? (
                         <>
                             <Tippy delay={[0, 100]} content="Upload video" placement="bottom">
                                 <button className={cx('action-btn')}>
@@ -122,11 +138,18 @@ function Header() {
                     ) : (
                         <>
                             <Button text>Upload</Button>
-                            <Button primary>Log in</Button>
+                            <Button
+                                onClick={() => {
+                                    handleOpenLogin();
+                                }}
+                                primary
+                            >
+                                Log in
+                            </Button>
                         </>
                     )}
-                    <Menu items={currentUser ? useMenu : MENU_ITEM}>
-                        {currentUser ? (
+                    <Menu items={Object.keys(currentUser)?.length !== 0 ? useMenu : MENU_ITEM}>
+                        {Object.keys(currentUser)?.length !== 0 ? (
                             <Image
                                 className={cx('userAvatar')}
                                 src="https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg"
