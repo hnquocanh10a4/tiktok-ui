@@ -8,3 +8,12 @@ export const suggestAccount = async (quantity) => {
         console.log(error);
     }
 };
+
+export const getUsertByUserName = async (userName) => {
+    try {
+        const res = await httprequest.get(`users${userName}`);
+        return res.data;
+    } catch (error) {
+        console.log(error);
+    }
+};

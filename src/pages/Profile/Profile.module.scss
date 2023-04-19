@@ -196,3 +196,16 @@
     color: rgba(22, 24, 35, 0.75);
     margin-top: 8px;
 }
+.content-video {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.video {
+    border-radius: 5px;
+    display: block;
+    width: 208.33px;
+    height: 275.66px;
+    object-fit: cover;
+    margin: 20px 20px 11px 0;
+}

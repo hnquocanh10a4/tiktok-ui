@@ -5,3 +5,4 @@ export const getVideoListSelector = (state) => state.home.videoList;
 export const getCurrentUserSelector = (state) => state.authentication.userLogin;
 export const getpopUpFormSelector = (state) => state.authentication.popUpForm;
 export const getOpenLoginFormSelector = (state) => state.authentication.loginForm;
+export const getUsertByUserName = (state) => state.profile.userProfile;

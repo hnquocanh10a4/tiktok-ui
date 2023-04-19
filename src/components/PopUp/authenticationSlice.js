@@ -39,7 +39,8 @@ const authenticationSlice = createSlice({
                 if (action.payload !== undefined) {
                     localStorage.removeItem(USER_LOGIN);
                     localStorage.removeItem(TOKEN);
-                    state.popUpForm = false;
+                    // state.popUpForm = false;
+                    // authenticationSlice.actions.openLoginForm();
                 }
             })
             .addCase(logOut.fulfilled, (state, action) => {
@@ -55,8 +56,9 @@ export const signIn = createAsyncThunk('signIn/signIn', async (data) => {
     return result;
 });
 
-export const signUp = createAsyncThunk('signIn/signUp', async (data) => {
-    const result = await authService.signUp(data);
+export const signUp = createAsyncThunk('signIn/signUp', async (data, thunkAPI) => {
+    const result = await authService.signUp({ ...data, type: 'email' });
+    thunkAPI.dispatch(authenticationSlice.actions.openLoginForm());
     return result;
 });
 

@@ -15,7 +15,7 @@ export const signIn = async (data) => {
 export const signUp = async (data) => {
     try {
         const res = await httprequest.post('auth/register', data);
-        toast.success('Đăng ký thành công!');
+        toast.success('Đăng ký thành công mời bạn đăng nhập');
         return res.data;
     } catch (error) {
         toast.error('Email đã được sử dụng');
