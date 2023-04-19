@@ -10,28 +10,58 @@ const authenticationSlice = createSlice({
     name: 'signIn',
     initialState: {
         userLogin: user,
-        loginForm: false,
+        popUpForm: false,
+        loginForm: true,
     },
     reducers: {
+        openpopUpForm: (state, action) => {
+            state.popUpForm = true;
+        },
+        closepopUpForm: (state, action) => {
+            state.popUpForm = false;
+        },
         openLoginForm: (state, action) => {
             state.loginForm = true;
         },
-        closeLoginForm: (state, action) => {
+        openRegisterForm: (state, action) => {
             state.loginForm = false;
         },
     },
     extraReducers: (builder) => {
-        builder.addCase(signIn.fulfilled, (state, action) => {
-            localStorage.setItem(USER_LOGIN, JSON.stringify(action.payload.data));
-            localStorage.setItem(TOKEN, `Bearer ${action.payload.meta.token}`);
-            state.userLogin = action.payload.data;
-        });
+        builder
+            .addCase(signIn.fulfilled, (state, action) => {
+                localStorage.setItem(USER_LOGIN, JSON.stringify(action.payload.data));
+                localStorage.setItem(TOKEN, `Bearer ${action.payload.meta.token}`);
+                state.userLogin = action.payload.data;
+                state.popUpForm = false;
+            })
+            .addCase(signUp.fulfilled, (state, action) => {
+                if (action.payload !== undefined) {
+                    localStorage.removeItem(USER_LOGIN);
+                    localStorage.removeItem(TOKEN);
+                    state.popUpForm = false;
+                }
+            })
+            .addCase(logOut.fulfilled, (state, action) => {
+                localStorage.removeItem(USER_LOGIN);
+                localStorage.removeItem(TOKEN);
+                state.userLogin = {};
+            });
     },
 });
 
 export const signIn = createAsyncThunk('signIn/signIn', async (data) => {
     const result = await authService.signIn(data);
     return result;
+});
+
+export const signUp = createAsyncThunk('signIn/signUp', async (data) => {
+    const result = await authService.signUp(data);
+    return result;
+});
+
+export const logOut = createAsyncThunk('signIn/logOut', async () => {
+    await authService.logOut();
 });
 
 export default authenticationSlice;

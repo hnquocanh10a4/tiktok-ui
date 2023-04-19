@@ -7,6 +7,7 @@ import Home from '~/pages/Home';
 import Profile from '~/pages/Profile/Profile';
 import Upload from '~/pages/Upload';
 import Search from '~/pages/Search/Search';
+import LogOut from '~/components/PopUp/LogOut/LogOut';
 // import Live from '~/pages/Live';
 
 const publicRoutes = [
@@ -19,6 +20,7 @@ const publicRoutes = [
     { path: config.routes.profile, component: Profile },
     { path: config.routes.upload, component: Upload, layout: HeaderOnly },
     { path: config.routes.search, component: Search, layout: null },
+    { path: config.routes.logout, component: LogOut, layout: null },
 ];
 
 const privateRoutes = [];

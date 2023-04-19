@@ -3,4 +3,5 @@ export const searchLoadingSelector = (state) => state.search.showLoading;
 export const getSuggesedUserSelector = (state) => state.sideBar.suggesedUser;
 export const getVideoListSelector = (state) => state.home.videoList;
 export const getCurrentUserSelector = (state) => state.authentication.userLogin;
-export const getLoginFormSelector = (state) => state.authentication.loginForm;
+export const getpopUpFormSelector = (state) => state.authentication.popUpForm;
+export const getOpenLoginFormSelector = (state) => state.authentication.loginForm;

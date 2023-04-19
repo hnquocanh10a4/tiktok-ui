@@ -2,26 +2,24 @@ import { Fragment } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { publicRoutes } from '~/routes';
 import DefaultLayout from '~/layouts';
-import { useSelector } from 'react-redux';
 import PopUp from './components/PopUp/PopUp';
-import { getLoginFormSelector } from './redux/selectors';
 import SignIn from './components/PopUp/SignIn/SignIn';
+import { useSelector } from 'react-redux';
+import { getOpenLoginFormSelector } from './redux/selectors';
+import SignUp from './components/PopUp/SignUp/SignUp';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
-    const stateLoginForm = useSelector(getLoginFormSelector);
-
+    const loginform = useSelector(getOpenLoginFormSelector);
     return (
         <Router>
             <div className="App">
-                {stateLoginForm ? (
-                    <>
-                        <PopUp>
-                            <SignIn />
-                        </PopUp>
-                    </>
-                ) : (
-                    ''
-                )}
+                <>
+                    <ToastContainer />
+                    <PopUp>{loginform ? <SignIn /> : <SignUp />}</PopUp>
+                </>
+
                 <Routes>
                     {publicRoutes.map((item, index) => {
                         let Layout = DefaultLayout;

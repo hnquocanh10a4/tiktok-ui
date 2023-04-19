@@ -25,41 +25,9 @@ import Image from '~/components/Image';
 import Search from '~/components/Search';
 import authenticationSlice from '~/components/PopUp/authenticationSlice';
 import { getCurrentUserSelector } from '~/redux/selectors';
+import { toast } from 'react-toastify';
 
 const cx = classNames.bind(styles);
-
-const MENU_ITEM = [
-    {
-        icon: <FontAwesomeIcon icon={faGlobeAfrica} />,
-        title: 'Language',
-        children: {
-            title: 'Language',
-            data: [
-                {
-                    code: 'en',
-                    title: 'English',
-                },
-                {
-                    code: 'vi',
-                    title: 'VietNamese',
-                },
-                {
-                    code: 'fr',
-                    title: 'France',
-                },
-            ],
-        },
-    },
-    {
-        icon: <FontAwesomeIcon icon={faQuestionCircle} />,
-        title: 'Question and Help',
-        to: '/',
-    },
-    {
-        icon: <FontAwesomeIcon icon={faKeyboard} />,
-        title: 'Keyboard',
-    },
-];
 
 // state true logined, false login failed
 // const currentUser = false;
@@ -75,6 +43,38 @@ function Header() {
     // } else {
     //     setCurrentUser(true);
     // }
+    const MENU_ITEM = [
+        {
+            icon: <FontAwesomeIcon icon={faGlobeAfrica} />,
+            title: 'Language',
+            children: {
+                title: 'Language',
+                data: [
+                    {
+                        code: 'en',
+                        title: 'English',
+                    },
+                    {
+                        code: 'vi',
+                        title: 'VietNamese',
+                    },
+                    {
+                        code: 'fr',
+                        title: 'France',
+                    },
+                ],
+            },
+        },
+        {
+            icon: <FontAwesomeIcon icon={faQuestionCircle} />,
+            title: 'Question and Help',
+            to: '/',
+        },
+        {
+            icon: <FontAwesomeIcon icon={faKeyboard} />,
+            title: 'Keyboard',
+        },
+    ];
 
     const useMenu = [
         {
@@ -99,13 +99,13 @@ function Header() {
             icon: <FontAwesomeIcon icon={faSignOut} />,
             title: 'Log out',
             // to: '/logout',
-            to: '/',
+            to: '/logout',
             separate: true,
         },
     ];
 
     const handleOpenLogin = () => {
-        dispatch(authenticationSlice.actions.openLoginForm());
+        dispatch(authenticationSlice.actions.openpopUpForm());
     };
 
     return (
@@ -150,11 +150,7 @@ function Header() {
                     )}
                     <Menu items={Object.keys(currentUser)?.length !== 0 ? useMenu : MENU_ITEM}>
                         {Object.keys(currentUser)?.length !== 0 ? (
-                            <Image
-                                className={cx('userAvatar')}
-                                src="https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg"
-                                alt="avatar"
-                            />
+                            <Image className={cx('userAvatar')} src={currentUser.avatar} alt="avatar" />
                         ) : (
                             <button className={cx('more-btn')}>
                                 <FontAwesomeIcon icon={faEllipsisVertical} />

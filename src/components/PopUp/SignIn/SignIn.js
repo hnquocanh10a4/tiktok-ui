@@ -5,8 +5,9 @@ import Button from '~/components/Button/Button';
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
-import { signIn } from '../authenticationSlice';
+import authenticationSlice, { signIn } from '../authenticationSlice';
 import { getCurrentUserSelector } from '~/redux/selectors';
+import { Link } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 
@@ -63,6 +64,18 @@ export default function SignIn() {
                     Đăng nhập
                 </Button>
             </form>
+            <p className={cx('singup-title-wrap')}>
+                Bạn không có tài khoản ?
+                <Button
+                    text
+                    className={cx('singup-title')}
+                    onClick={() => {
+                        dispatch(authenticationSlice.actions.openRegisterForm());
+                    }}
+                >
+                    Đăng ký
+                </Button>
+            </p>
         </div>
     );
 }
