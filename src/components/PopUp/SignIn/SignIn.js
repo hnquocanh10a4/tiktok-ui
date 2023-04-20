@@ -5,7 +5,7 @@ import Button from '~/components/Button/Button';
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
-import authenticationSlice, { signIn } from '../authenticationSlice';
+import authenticationSlice, { signIn } from '../../../redux/slice/authenticationSlice';
 import { getCurrentUserSelector } from '~/redux/selectors';
 import { Link } from 'react-router-dom';
 

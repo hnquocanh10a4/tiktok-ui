@@ -7,7 +7,7 @@ if (localStorage.getItem(USER_LOGIN)) {
     user = JSON.parse(localStorage.getItem(USER_LOGIN));
 }
 const authenticationSlice = createSlice({
-    name: 'signIn',
+    name: 'authentication',
     initialState: {
         userLogin: user,
         popUpForm: false,
@@ -51,18 +51,18 @@ const authenticationSlice = createSlice({
     },
 });
 
-export const signIn = createAsyncThunk('signIn/signIn', async (data) => {
+export const signIn = createAsyncThunk('authentication/signIn', async (data) => {
     const result = await authService.signIn(data);
     return result;
 });
 
-export const signUp = createAsyncThunk('signIn/signUp', async (data, thunkAPI) => {
+export const signUp = createAsyncThunk('authentication/signUp', async (data, thunkAPI) => {
     const result = await authService.signUp({ ...data, type: 'email' });
     thunkAPI.dispatch(authenticationSlice.actions.openLoginForm());
     return result;
 });
 
-export const logOut = createAsyncThunk('signIn/logOut', async () => {
+export const logOut = createAsyncThunk('authentication/logOut', async () => {
     await authService.logOut();
 });
 

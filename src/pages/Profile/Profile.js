@@ -1,8 +1,7 @@
 import classNames from 'classnames/bind';
 
 import styles from './Profile.module.scss';
-import * as searchService from '~/services/searchService';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faVideoSlash } from '@fortawesome/free-solid-svg-icons';
@@ -10,7 +9,8 @@ import Button from '~/components/Button';
 import { LookIcon } from '~/components/Icon';
 import { useSelector, useDispatch } from 'react-redux';
 import { getUsertByUserName } from '~/redux/selectors';
-import { getUserProfile } from './profileSlice';
+import { getUserProfile } from '../../redux/slice/userSlice';
+import Image from '~/components/Image/Image';
 
 const cx = classNames.bind(styles);
 
@@ -43,7 +43,7 @@ function Profile() {
     return (
         <div className={cx('wrapper')}>
             <div className={cx('image-wrapper')}>
-                <img className={cx('image')} src={info?.avatar} alt={info?.nickname} />
+                <Image className={cx('image')} src={info?.avatar} alt={info?.nickname} />
                 <div className={cx('info')}>
                     <p className={cx('username')}>
                         <span>{info?.nickname}</span>

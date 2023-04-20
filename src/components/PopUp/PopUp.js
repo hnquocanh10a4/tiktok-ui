@@ -4,7 +4,7 @@ import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark } from '@fortawesome/free-regular-svg-icons';
 import { useSelector, useDispatch } from 'react-redux';
-import authenticationSlice from './authenticationSlice';
+import authenticationSlice from '../../redux/slice/authenticationSlice';
 import { getpopUpFormSelector } from '~/redux/selectors';
 
 const cx = classNames.bind(styles);

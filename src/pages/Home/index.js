@@ -5,8 +5,10 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import PostItem from './PostItem';
 import styles from './Home.module.scss';
-import { getVideoListSelector } from '~/redux/selectors';
-import { getVideolist } from './homeSlice';
+import { getFollowingListSelector, getVideoListSelector } from '~/redux/selectors';
+import { getVideolist } from '../../redux/slice/homeSlice';
+import { getFollowingList } from '~/redux/slice/followingSlice';
+import { TOKEN } from '~/untils/setting/configs';
 
 const cx = classNames.bind(styles);
 
@@ -14,11 +16,16 @@ function Home() {
     const [page, setPage] = useState(1);
 
     const videoList = useSelector(getVideoListSelector);
-    console.log(videoList);
+    const followingList = useSelector(getFollowingListSelector);
+    console.log(videoList, 'videoList');
+    // console.log(followingList, 'followingList');
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(getVideolist(page));
+        if (localStorage.getItem(TOKEN)) {
+            dispatch(getFollowingList());
+        }
     }, [page]);
 
     const fetchMoreData = () => {
@@ -39,7 +46,7 @@ function Home() {
                 }
             >
                 {videoList.map((item) => {
-                    return <PostItem key={item.id} data={item} />;
+                    return <PostItem key={item.id} data={item} followingList={followingList} />;
                     // return <p>{item.id}</p>;
                 })}
             </InfiniteScroll>

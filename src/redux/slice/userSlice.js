@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import * as userService from '~/services/userService';
 
-const profileSlice = createSlice({
+const userSlice = createSlice({
     name: 'profile',
     initialState: {
         userProfile: {},
@@ -19,4 +19,4 @@ export const getUserProfile = createAsyncThunk('profile/getUserProfile', async (
     return result;
 });
 
-export default profileSlice;
+export default userSlice;

@@ -15,6 +15,8 @@ function InfoItem({ data }) {
         padding: '10px 0',
         width: '100%',
     };
+    console.log(data.id, 'data sirba');
+
     return (
         <div className={cx('wrapper')}>
             <div style={styles}>

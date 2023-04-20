@@ -11,7 +11,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames/bind';
 import styles from './Search.module.scss';
 import { searchLoadingSelector, searchResultSelector } from '~/redux/selectors';
-import searchSlice, { search } from './searchSlice';
+import searchSlice, { search } from '../../redux/slice/searchSlice';
 
 const cx = classNames.bind(styles);
 

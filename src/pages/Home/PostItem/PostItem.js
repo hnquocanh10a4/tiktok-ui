@@ -14,14 +14,16 @@ import styles from './PostItem.module.scss';
 import classNames from 'classnames/bind';
 import Button from '~/components/Button';
 import { useRef, useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import Image from '~/components/Image/Image';
 import useElementOnScreen from '~/hooks/useElementOnScreen';
+import { followAction, unfollowAction } from '~/redux/slice/followingSlice';
 
 const cx = classNames.bind(styles);
 
-function PostItem({ data }) {
+function PostItem({ data, followingList }) {
     const [stateHeart, setStateHeart] = useState(false);
-    const [follow, setFollow] = useState(false);
+    // const [follow, setFollow] = useState(false);
     const [isPlay, setIsPlay] = useState(true);
     const [isMuted, setIsMuted] = useState(false);
 
@@ -31,6 +33,19 @@ function PostItem({ data }) {
     // video.current.play();
     const isVisible = useElementOnScreen(options, video);
     const [playing, setPlaying] = useState(false);
+
+    // console.log(followingList, 'followingList');
+    // console.log(data.user.id, 'data');
+
+    const dispatch = useDispatch();
+
+    let follow = false;
+
+    followingList.forEach((user) => {
+        if (user.id === data.user.id) {
+            follow = true;
+        }
+    });
 
     // custom video controls
 
@@ -186,7 +201,7 @@ function PostItem({ data }) {
                     className={cx('btn-follow', { follow })}
                     // text={follow}
                     onClick={() => {
-                        follow ? setFollow(false) : setFollow(true);
+                        follow ? dispatch(unfollowAction(data.user.id)) : dispatch(followAction(data.user.id));
                     }}
                 >
                     {follow ? 'Following' : 'Follow'}

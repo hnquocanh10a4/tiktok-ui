@@ -23,7 +23,7 @@ import Menu from '~/components/Popper/Menu';
 import { InboxIcon, MessageIcon, UploadIcon } from '~/components/Icon';
 import Image from '~/components/Image';
 import Search from '~/components/Search';
-import authenticationSlice from '~/components/PopUp/authenticationSlice';
+import authenticationSlice from '~/redux/slice/authenticationSlice';
 import { getCurrentUserSelector } from '~/redux/selectors';
 import { toast } from 'react-toastify';
 

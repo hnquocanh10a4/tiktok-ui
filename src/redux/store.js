@@ -1,9 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authenticationSlice from '~/components/PopUp/authenticationSlice';
-import searchSlice from '~/components/Search/searchSlice.js';
+import authenticationSlice from '~/redux/slice/authenticationSlice';
+import searchSlice from '~/redux/slice/searchSlice.js';
 import sideBarSlice from '~/layouts/component/SideBar/sideBarSlice';
-import homeSlice from '~/pages/Home/homeSlice';
-import profileSlice from '~/pages/Profile/profileSlice';
+import homeSlice from '~/redux/slice/homeSlice';
+import userSlice from '~/redux/slice/userSlice';
+import followingSlice from './slice/followingSlice';
 
 const store = configureStore({
     reducer: {
@@ -11,7 +12,8 @@ const store = configureStore({
         sideBar: sideBarSlice.reducer,
         home: homeSlice.reducer,
         authentication: authenticationSlice.reducer,
-        profile: profileSlice.reducer,
+        profile: userSlice.reducer,
+        following: followingSlice.reducer,
     },
 });
 
