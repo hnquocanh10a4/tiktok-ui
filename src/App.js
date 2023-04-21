@@ -1,17 +1,25 @@
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { publicRoutes } from '~/routes';
 import DefaultLayout from '~/layouts';
 import PopUp from './components/PopUp/PopUp';
 import SignIn from './components/PopUp/SignIn/SignIn';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { getOpenLoginFormSelector } from './redux/selectors';
 import SignUp from './components/PopUp/SignUp/SignUp';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
+import { TOKEN } from './untils/setting/configs';
+import { getFollowingList } from './redux/slice/followingSlice';
 
 function App() {
     const loginform = useSelector(getOpenLoginFormSelector);
+    const dispatch = useDispatch();
+    useEffect(() => {
+        if (localStorage.getItem(TOKEN)) {
+            dispatch(getFollowingList());
+        }
+    }, []);
     return (
         <Router>
             <div className="App">

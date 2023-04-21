@@ -14,15 +14,18 @@ import styles from './PostItem.module.scss';
 import classNames from 'classnames/bind';
 import Button from '~/components/Button';
 import { useRef, useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Image from '~/components/Image/Image';
 import useElementOnScreen from '~/hooks/useElementOnScreen';
 import { followAction, unfollowAction } from '~/redux/slice/followingSlice';
+import homeSlice, { likeAction, unlikeAction } from '~/redux/slice/homeSlice';
+import { getVolumeSelector } from '~/redux/selectors';
 
 const cx = classNames.bind(styles);
 
 function PostItem({ data, followingList }) {
-    const [stateHeart, setStateHeart] = useState(false);
+    // const [stateHeart, setStateHeart] = useState(false);
+
     // const [follow, setFollow] = useState(false);
     const [isPlay, setIsPlay] = useState(true);
     const [isMuted, setIsMuted] = useState(false);
@@ -30,14 +33,27 @@ function PostItem({ data, followingList }) {
     const options = { root: null, rootMargin: '0px', threshold: 0.7 };
     // const videoRef = useRef(null);
     const video = useRef(null);
+
+    // cai dat am luong cho video
+    let volume = useSelector(getVolumeSelector);
+    console.log(volume, 'volume');
+    // video.current.volume = volume;
+
+    if (video?.current) {
+        video.current.volume = volume;
+    }
+
     // video.current.play();
     const isVisible = useElementOnScreen(options, video);
     const [playing, setPlaying] = useState(false);
 
     // console.log(followingList, 'followingList');
-    // console.log(data.user.id, 'data');
+    // console.log(data.uuid, 'data');
 
     const dispatch = useDispatch();
+
+    let stateHeart = data.is_liked;
+    // console.log(stateHeart, 'stateHeart');
 
     let follow = false;
 
@@ -167,19 +183,20 @@ function PostItem({ data, followingList }) {
                                     } else {
                                         setIsMuted(false);
                                     }
-                                    video.current.volume = e.target.value;
+                                    console.log(e.target.value, 'am luong');
+                                    dispatch(homeSlice.actions.setVolume(e.target.value));
+                                    // video.current.volume = volume;
                                 }}
                             />
                         </div>
                         <div className={cx('icon-group')}>
-                            <button className={cx('wrap-icon')}>
-                                <FontAwesomeIcon
-                                    icon={faHeart}
-                                    className={cx('icon', { stateHeart })}
-                                    onClick={() => {
-                                        stateHeart ? setStateHeart(false) : setStateHeart(true);
-                                    }}
-                                />
+                            <button
+                                className={cx('wrap-icon')}
+                                onClick={() => {
+                                    stateHeart ? dispatch(unlikeAction(data.uuid)) : dispatch(likeAction(data.uuid));
+                                }}
+                            >
+                                <FontAwesomeIcon icon={faHeart} className={cx('icon', { stateHeart })} />
                             </button>
                             <span className={cx('quantity')}>{data.likes_count}</span>
                             <button className={cx('wrap-icon')}>

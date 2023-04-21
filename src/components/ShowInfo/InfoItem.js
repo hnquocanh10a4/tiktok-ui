@@ -3,11 +3,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames/bind';
 import Button from '../Button';
 import styles from './InfoItem.module.scss';
+import { useDispatch } from 'react-redux';
+import { followAction, unfollowAction } from '~/redux/slice/followingSlice';
 
 const cx = classNames.bind(styles);
 
-function InfoItem({ data }) {
+function InfoItem({ data, followingList }) {
     // only style inline can be used
+    const dispatch = useDispatch();
     const styles = {
         display: 'flex',
         justifyContent: 'space-between',
@@ -15,14 +18,28 @@ function InfoItem({ data }) {
         padding: '10px 0',
         width: '100%',
     };
-    console.log(data.id, 'data sirba');
+    let follow = false;
+
+    followingList.forEach((user) => {
+        if (user.id === data.id) {
+            follow = true;
+        }
+    });
 
     return (
         <div className={cx('wrapper')}>
             <div style={styles}>
                 <img className={cx('image')} src={data.avatar} alt={data.nickname} />
-                <Button className={cx('btn-follow')} primary small>
-                    Follow
+                <Button
+                    className={cx('btn-follow', { follow })}
+                    primary={!follow}
+                    outline={follow}
+                    small
+                    onClick={() => {
+                        follow ? dispatch(unfollowAction(data.id)) : dispatch(followAction(data.id));
+                    }}
+                >
+                    {follow ? 'Following' : 'Follow'}
                 </Button>
             </div>
             <div className={cx('info')}>

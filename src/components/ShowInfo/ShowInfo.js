@@ -2,13 +2,17 @@ import PropTypes from 'prop-types';
 import Tippy from '@tippyjs/react/headless';
 import classNames from 'classnames/bind';
 import { Wrapper as PopperWrapper } from '~/components/Popper';
+import { useSelector } from 'react-redux';
 
 import styles from './ShowInfo.module.scss';
 // import Button from '../Button';
 import InfoItem from './InfoItem';
+import { getFollowingListSelector } from '~/redux/selectors';
 const cx = classNames.bind(styles);
 
 function ShowInfo({ children, data }) {
+    const followingList = useSelector(getFollowingListSelector);
+
     return (
         <Tippy
             placement="bottom-start"
@@ -17,7 +21,7 @@ function ShowInfo({ children, data }) {
             render={(attrs) => (
                 <div className={cx('content')} tabIndex="-1" {...attrs}>
                     <PopperWrapper classNames={cx('menu-popper')}>
-                        <InfoItem data={data} />
+                        <InfoItem data={data} followingList={followingList} />
                     </PopperWrapper>
                 </div>
             )}

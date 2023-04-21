@@ -7,8 +7,6 @@ import PostItem from './PostItem';
 import styles from './Home.module.scss';
 import { getFollowingListSelector, getVideoListSelector } from '~/redux/selectors';
 import { getVideolist } from '../../redux/slice/homeSlice';
-import { getFollowingList } from '~/redux/slice/followingSlice';
-import { TOKEN } from '~/untils/setting/configs';
 
 const cx = classNames.bind(styles);
 
@@ -23,9 +21,6 @@ function Home() {
 
     useEffect(() => {
         dispatch(getVideolist(page));
-        if (localStorage.getItem(TOKEN)) {
-            dispatch(getFollowingList());
-        }
     }, [page]);
 
     const fetchMoreData = () => {

@@ -8,9 +8,10 @@ import { faCheckCircle, faVideoSlash } from '@fortawesome/free-solid-svg-icons';
 import Button from '~/components/Button';
 import { LookIcon } from '~/components/Icon';
 import { useSelector, useDispatch } from 'react-redux';
-import { getUsertByUserName } from '~/redux/selectors';
+import { getFollowingListSelector, getUsertByUserName } from '~/redux/selectors';
 import { getUserProfile } from '../../redux/slice/userSlice';
 import Image from '~/components/Image/Image';
+import { followAction, unfollowAction } from '~/redux/slice/followingSlice';
 
 const cx = classNames.bind(styles);
 
@@ -22,9 +23,18 @@ function Profile() {
     const dispatch = useDispatch();
     const location = useLocation();
     // console.log(location.pathname, 'location.pathname');
+    // console.log(info, 'info');
 
     const [active, setActive] = useState(true);
-    const [follow, setFollow] = useState(false);
+    // const [follow, setFollow] = useState(false);
+    let follow = false;
+    const followingList = useSelector(getFollowingListSelector);
+
+    followingList.forEach((user) => {
+        if (user.id === info.id) {
+            follow = true;
+        }
+    });
 
     useEffect(() => {
         dispatch(getUserProfile(location.pathname));
@@ -54,7 +64,7 @@ function Profile() {
                         primary
                         className={cx('btn-follow', { primary: !follow, outline: follow })}
                         onClick={() => {
-                            follow ? setFollow(false) : setFollow(true);
+                            follow ? dispatch(unfollowAction(info.id)) : dispatch(followAction(info.id));
                         }}
                     >
                         {follow ? 'Unfollow' : 'Follow'}
