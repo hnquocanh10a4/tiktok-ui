@@ -6,6 +6,7 @@ const routes = {
     search: '/search',
     live: '/live',
     logout: '/logout',
+    detai: '/@:nickname/video/:id',
 };
 
 export default routes;

@@ -20,6 +20,7 @@ import useElementOnScreen from '~/hooks/useElementOnScreen';
 import { followAction, unfollowAction } from '~/redux/slice/followingSlice';
 import homeSlice, { likeAction, unlikeAction } from '~/redux/slice/homeSlice';
 import { getVolumeSelector } from '~/redux/selectors';
+import { Link, useNavigate } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 
@@ -28,16 +29,21 @@ function PostItem({ data, followingList }) {
 
     // const [follow, setFollow] = useState(false);
     const [isPlay, setIsPlay] = useState(true);
-    const [isMuted, setIsMuted] = useState(false);
 
     const options = { root: null, rootMargin: '0px', threshold: 0.7 };
     // const videoRef = useRef(null);
     const video = useRef(null);
 
+    const navigate = useNavigate();
+
     // cai dat am luong cho video
-    let volume = useSelector(getVolumeSelector);
-    console.log(volume, 'volume');
+
     // video.current.volume = volume;
+
+    //tao bien redux, luu gia tri am luong
+
+    let volume = useSelector(getVolumeSelector);
+    // console.log(volume, 'volume');
 
     if (video?.current) {
         video.current.volume = volume;
@@ -45,10 +51,11 @@ function PostItem({ data, followingList }) {
 
     // video.current.play();
     const isVisible = useElementOnScreen(options, video);
+    // console.log(isVisible, 'isVisible');
     const [playing, setPlaying] = useState(false);
 
     // console.log(followingList, 'followingList');
-    // console.log(data.uuid, 'data');
+    // console.log(data, 'data');
 
     const dispatch = useDispatch();
 
@@ -103,14 +110,18 @@ function PostItem({ data, followingList }) {
     return (
         <div className={cx('wrapper')}>
             <div className={cx('container')}>
-                <Image src={data.user.avatar} alt={data.user.nickname} className={cx('avatar')} />
+                <Link to={`@${data.user.nickname}`}>
+                    <Image src={data.user.avatar} alt={data.user.nickname} className={cx('avatar')} />
+                </Link>
                 <div className={cx('info')}>
-                    <div>
-                        <span className={cx('username')}>{data.user.nickname}</span>
-                        <span className={cx('name')}>
-                            {data.user.first_name} {data.user.last_name}
-                        </span>
-                    </div>
+                    <Link to={`@${data.user.nickname}`}>
+                        <div>
+                            <span className={cx('username')}>{data.user.nickname}</span>
+                            <span className={cx('name')}>
+                                {data.user.first_name} {data.user.last_name}
+                            </span>
+                        </div>
+                    </Link>
                     <span className={cx('caption')}>{data.description}</span>
                     <div className={cx('content')}>
                         <div className={cx('video-player')}>
@@ -119,15 +130,12 @@ function PostItem({ data, followingList }) {
                                 className={cx('video')}
                                 src={data.file_url}
                                 type="video/mp4"
+                                // muted
                                 loop
                                 playsInline
                                 poster={data.thumb_url}
                                 onClick={() => {
-                                    if (video.current.paused) {
-                                        handlePlay();
-                                    } else {
-                                        handlePause();
-                                    }
+                                    navigate(`/@${data.user.nickname}/video/${data.uuid}`);
                                 }}
                             ></video>
                             {/* check video is play ? and set onClick to toggle between play and pause */}
@@ -150,13 +158,14 @@ function PostItem({ data, followingList }) {
                             )}
                             {/* check video is muted ? and set onClick to toggle between muted and play */}
 
-                            {isMuted ? (
+                            {volume === 0 ? (
                                 <FontAwesomeIcon
                                     className={cx('mute-btn')}
                                     icon={faVolumeXmark}
                                     onClick={() => {
-                                        video.current.muted = false;
-                                        setIsMuted(false);
+                                        // video.current.muted = false;
+                                        // setIsMuted(false);
+                                        dispatch(homeSlice.actions.setVolume(1));
                                     }}
                                 />
                             ) : (
@@ -164,8 +173,9 @@ function PostItem({ data, followingList }) {
                                     className={cx('mute-btn')}
                                     icon={faVolumeHigh}
                                     onClick={() => {
-                                        video.current.muted = true;
-                                        setIsMuted(true);
+                                        // video.current.muted = true;
+                                        // setIsMuted(true);
+                                        dispatch(homeSlice.actions.setVolume(0));
                                     }}
                                 />
                             )}
@@ -174,17 +184,17 @@ function PostItem({ data, followingList }) {
                                 type="range"
                                 min="0"
                                 max="1"
-                                // value={volume}
+                                value={volume}
                                 step="0.01"
-                                onMouseMove={(e) => {
+                                onChange={(e) => {
                                     // eslint-disable-next-line eqeqeq
-                                    if (e.target.value == 0) {
-                                        setIsMuted(true);
-                                    } else {
-                                        setIsMuted(false);
-                                    }
-                                    console.log(e.target.value, 'am luong');
-                                    dispatch(homeSlice.actions.setVolume(e.target.value));
+                                    // if (e.target.value == 0) {
+                                    //     setIsMuted(true);
+                                    // } else {
+                                    //     setIsMuted(false);
+                                    // }
+                                    console.log(typeof e.target.value, 'am luong');
+                                    dispatch(homeSlice.actions.setVolume(+e.target.value));
                                     // video.current.volume = volume;
                                 }}
                             />

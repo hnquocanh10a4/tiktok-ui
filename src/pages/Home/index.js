@@ -21,7 +21,7 @@ function Home() {
 
     useEffect(() => {
         dispatch(getVideolist(page));
-    }, [page]);
+    }, [page, dispatch]);
 
     const fetchMoreData = () => {
         console.log('cong them 1');

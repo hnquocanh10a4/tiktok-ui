@@ -25,7 +25,6 @@ import Image from '~/components/Image';
 import Search from '~/components/Search';
 import authenticationSlice from '~/redux/slice/authenticationSlice';
 import { getCurrentUserSelector } from '~/redux/selectors';
-import { toast } from 'react-toastify';
 
 const cx = classNames.bind(styles);
 
@@ -36,6 +35,7 @@ function Header() {
     // const [currentUser, setCurrentUser] = useState(false);
     const currentUser = useSelector(getCurrentUserSelector);
     console.log('currentUser', Object.keys(currentUser)?.length !== 0);
+    console.log('currentUserDetail', currentUser);
     const dispatch = useDispatch();
 
     // if (Object.keys(user).length === 0) {

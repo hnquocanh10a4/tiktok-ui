@@ -6,7 +6,7 @@ const homeSlice = createSlice({
     name: 'home',
     initialState: {
         videoList: [],
-        volume: 1,
+        volume: 0,
     },
     reducers: {
         setVolume: (state, action) => {

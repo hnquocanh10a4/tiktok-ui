@@ -21,7 +21,7 @@ export const getFollowingList = createAsyncThunk('following/getFollowingList', a
 
     const totalPages = result.meta.pagination.total_pages;
     for (let page = 1; page < totalPages + 1; page++) {
-        const result = await followingService.getFollowingList();
+        const result = await followingService.getFollowingList(page);
         listResult = [...listResult, ...result.data];
     }
     return listResult;
