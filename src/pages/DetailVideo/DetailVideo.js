@@ -2,11 +2,18 @@ import React, { useEffect, useRef, useState } from 'react';
 import styles from './DetailVideo.module.scss';
 import classNames from 'classnames/bind';
 import { useSelector, useDispatch } from 'react-redux';
-import { getFollowingListSelector, getVideoListSelector, getVolumeSelector } from '~/redux/selectors';
+import {
+    getCommentByIdSelector,
+    getFollowingListSelector,
+    getVideoListSelector,
+    getVolumeSelector,
+} from '~/redux/selectors';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+
 import homeSlice, { getVideolist, likeAction, unlikeAction } from '~/redux/slice/homeSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+    faAt,
     faChevronDown,
     faChevronUp,
     faCommentDots,
@@ -21,12 +28,17 @@ import Image from '~/components/Image/Image';
 import Button from '~/components/Button/Button';
 import { followAction, unfollowAction } from '~/redux/slice/followingSlice';
 import { toast } from 'react-toastify';
+import CommentItem from './CommentItem/CommentItem';
+import { commentdAction, getCommentByIdAction } from '~/redux/slice/commentSlice';
+import { faFaceSmile } from '@fortawesome/free-regular-svg-icons';
 
 const cx = classNames.bind(styles);
 
 export default function DetailVideo() {
     const [page, setPage] = useState(1);
     const [isPlay, setIsPlay] = useState(false);
+    const [comment, setComment] = useState('');
+    // console.log(comment, 'comment');
     // const [data, setData] = useState({});
 
     const video = useRef();
@@ -40,6 +52,8 @@ export default function DetailVideo() {
     const splitPath = location.pathname.split('/');
     const videoId = splitPath[splitPath.length - 1];
 
+    //post video
+
     // get video volume
     let volume = useSelector(getVolumeSelector);
     if (video?.current) {
@@ -48,14 +62,16 @@ export default function DetailVideo() {
 
     const videoList = useSelector(getVideoListSelector);
     const followingList = useSelector(getFollowingListSelector);
+    const commentList = useSelector(getCommentByIdSelector);
+    console.log(commentList, 'commentList');
 
     // get video data
     let data = {};
-    let count = 0;
-    videoList.forEach((element) => {
+    let count = -1;
+    videoList.forEach((element, index) => {
         if (element.uuid === videoId) {
             // console.log(element, 'element');
-            count++;
+            count = index;
             data = element;
         }
     });
@@ -76,7 +92,8 @@ export default function DetailVideo() {
     // console.log(followingList, 'followingList: ');
     useEffect(() => {
         dispatch(getVideolist(page));
-    }, [page, dispatch]);
+        dispatch(getCommentByIdAction(videoId));
+    }, [page, dispatch, videoId]);
 
     const handlePlay = () => {
         video.current.play();
@@ -86,6 +103,12 @@ export default function DetailVideo() {
     const handlePause = () => {
         video.current.pause();
         setIsPlay(true);
+    };
+
+    const renderComment = () => {
+        return commentList?.map((comment, index) => {
+            return <CommentItem key={index} data={comment} videoId={videoId} />;
+        });
     };
 
     return (
@@ -190,31 +213,45 @@ export default function DetailVideo() {
                     </div>
                 </div>
                 <div className={cx('video-glassmorphism-wrap')}>
-                    {count === 0 && (
+                    {count !== 0 ? (
                         <FontAwesomeIcon
                             className={cx('icon-contain', 'up-icon')}
                             icon={faChevronUp}
-                            onClick={() => {}}
+                            onClick={() => {
+                                count--;
+                                data = videoList[count];
+                                navigate(`/@${data.user.nickname}/video/${data.uuid}`);
+                            }}
                         />
+                    ) : (
+                        ''
                     )}
-                    <FontAwesomeIcon
-                        className={cx('icon-contain', 'down-icon')}
-                        icon={faChevronDown}
-                        onClick={() => {
-                            count++;
-                            data = videoList[count - 1];
-                        }}
-                    />
+                    {count !== videoList.length - 1 ? (
+                        <FontAwesomeIcon
+                            className={cx('icon-contain', 'down-icon')}
+                            icon={faChevronDown}
+                            onClick={() => {
+                                if (count < videoList.length) {
+                                    count++;
+                                    data = videoList[count];
+                                    console.log(data, 'data ++');
+                                    navigate(`/@${data?.user?.nickname}/video/${data?.uuid}`);
+                                }
+                            }}
+                        />
+                    ) : (
+                        ''
+                    )}
                 </div>
             </div>
             <div className={cx('info-content')}>
                 <div className={cx('header-info')}>
                     <div className={cx('info-wrap')}>
-                        <Link to={`@${data?.user?.nickname}`}>
+                        <Link to={`/@${data?.user?.nickname}`}>
                             <Image src={data?.user?.avatar} alt={data?.user?.first_name} className={cx('avatar')} />
                         </Link>
                         <div className={cx('info')}>
-                            <Link to={`@${data?.user?.nickname}`}>
+                            <Link to={`/@${data?.user?.nickname}`}>
                                 <div>
                                     <span className={cx('username')}>{data?.user?.nickname}</span>
                                     <span className={cx('name')}>
@@ -274,6 +311,41 @@ export default function DetailVideo() {
                     >
                         Sao chép liên kết
                     </button>
+                </div>
+                {/* comment */}
+                {/* <CommentItem data={data} /> */}
+                <div className={cx('comment-wrap')}>{renderComment()}</div>
+
+                <div>
+                    <form
+                        className={cx('comment-post')}
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            const data = { comment: comment };
+                            dispatch(commentdAction({ videoId, data }));
+                            setComment('');
+                        }}
+                    >
+                        <div className={cx('comment-input-wrap')}>
+                            <input
+                                type="text"
+                                value={comment}
+                                name="comment"
+                                className={cx('comment-input')}
+                                placeholder="Comment ..."
+                                onChange={(e) => {
+                                    setComment(e.target.value);
+                                }}
+                            />
+                            <div className={cx('comment-icon-wrap')}>
+                                <FontAwesomeIcon className={cx('comment-icon-item')} icon={faAt} />
+                                <FontAwesomeIcon className={cx('comment-icon-item')} icon={faFaceSmile} />
+                            </div>
+                        </div>
+                        <Button text disabled={comment === ''}>
+                            Post
+                        </Button>
+                    </form>
                 </div>
             </div>
         </div>

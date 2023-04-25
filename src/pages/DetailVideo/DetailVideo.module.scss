@@ -1,6 +1,7 @@
 .container {
     display: grid;
-    grid-template-columns: 2fr 1.1fr;
+    // grid-template-columns: 2fr 1fr !important;
+    grid-template-columns: 992px 544px !important;
     grid-template-rows: 100vh;
 }
 
@@ -89,8 +90,8 @@
 }
 
 .avatar {
-    height: 56px;
-    width: 56px;
+    height: 46px;
+    width: 46px;
     object-fit: cover;
     border-radius: 50%;
     margin-right: 4px;
@@ -102,15 +103,17 @@
 
 .username {
     font-weight: 700;
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     line-height: 2.5rem;
     display: inline-block;
     margin-right: 4px;
+    // width: 100px;
+    // overflow: hidden;
 }
 
 .name {
     font-weight: 400;
-    font-size: 1.9rem;
+    font-size: 1.6rem;
     display: inline-block;
     line-height: 2.8rem;
 }
@@ -344,4 +347,96 @@
     flex: 0 0 auto;
     cursor: pointer;
     padding: 7px 18px;
+}
+
+// comment
+.comment-wrap {
+    margin-top: 20px;
+    height: 330px;
+    width: 100%;
+    background-color: rgba(22, 24, 35, 0.06);
+    padding: 10px;
+    overflow: auto;
+}
+
+.comment-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.comment-container-info {
+}
+
+.comment-container-info-icon {
+    display: flex;
+    flex-direction: column;
+    font-size: 1.8rem;
+    align-items: center;
+    color: rgba(22, 24, 35, 0.5);
+    padding: 0 10px;
+    &-more {
+        color: var(--black);
+    }
+
+    &-heart {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+.hiddenMoreBtn {
+    visibility: hidden;
+}
+
+.wrap-detele-edit-button {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.detele-edit-button:hover {
+    color: var(--primary);
+}
+
+.comment-post {
+    display: flex;
+    align-items: center;
+}
+
+.comment-input-wrap {
+    display: flex;
+    margin: 10px 0;
+    background-color: rgba(22, 24, 35, 0.06);
+    align-items: center;
+}
+.comment-input {
+    width: 328px;
+    height: 20px;
+    padding: 17px 10px;
+    background-color: rgba(22, 24, 35, 0.06);
+    border-radius: 5px 0 0 5px;
+}
+
+.comment-icon-wrap {
+    display: flex;
+    background-color: rgba(22, 24, 35, 0.06);
+    padding: 5px 0;
+    border-radius: 0 5px 5px 0;
+}
+.comment-icon-item {
+    font-size: 2.3rem;
+    margin-right: 10px;
+}
+
+// coment list
+.wrap-username-name {
+    display: flex;
+    flex-direction: column;
+}
+
+.date-comment {
+    color: rgba(22, 24, 35, 0.5);
 }

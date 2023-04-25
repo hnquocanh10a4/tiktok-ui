@@ -8,3 +8,4 @@ export const getpopUpFormSelector = (state) => state.authentication.popUpForm;
 export const getOpenLoginFormSelector = (state) => state.authentication.loginForm;
 export const getUsertByUserName = (state) => state.profile.userProfile;
 export const getFollowingListSelector = (state) => state.following.followingList;
+export const getCommentByIdSelector = (state) => state.comment.listComment;

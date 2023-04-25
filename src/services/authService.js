@@ -3,6 +3,8 @@ import { toast } from 'react-toastify';
 
 export const signIn = async (data) => {
     try {
+        console.log(data, 'data service');
+
         const res = await httprequest.post('auth/login', data);
         toast.success('Đăng nhập thành công!');
         return res.data;

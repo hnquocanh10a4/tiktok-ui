@@ -5,6 +5,7 @@ import sideBarSlice from '~/layouts/component/SideBar/sideBarSlice';
 import homeSlice from '~/redux/slice/homeSlice';
 import userSlice from '~/redux/slice/userSlice';
 import followingSlice from './slice/followingSlice';
+import commentSlice from './slice/commentSlice';
 
 const store = configureStore({
     reducer: {
@@ -14,6 +15,7 @@ const store = configureStore({
         authentication: authenticationSlice.reducer,
         profile: userSlice.reducer,
         following: followingSlice.reducer,
+        comment: commentSlice.reducer,
     },
 });
 
