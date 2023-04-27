@@ -30,3 +30,13 @@ export const deleteCommentdAction = createAsyncThunk('comment/deleteCommentdActi
     await commentService.deleteComment(data.id);
     await thunkAPI.dispatch(getCommentByIdAction(data.uuid));
 });
+
+export const likeCommentdAction = createAsyncThunk('comment/likeCommentdAction', async (data, thunkAPI) => {
+    await commentService.likeComment(data.id);
+    await thunkAPI.dispatch(getCommentByIdAction(data.uuid));
+});
+
+export const unlikeCommentdAction = createAsyncThunk('comment/unlikeCommentdAction', async (data, thunkAPI) => {
+    await commentService.unlikeComment(data.id);
+    await thunkAPI.dispatch(getCommentByIdAction(data.uuid));
+});

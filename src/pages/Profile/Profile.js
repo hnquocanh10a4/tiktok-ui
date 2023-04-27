@@ -12,6 +12,7 @@ import { getFollowingListSelector, getUsertByUserName } from '~/redux/selectors'
 import { getUserProfile } from '../../redux/slice/userSlice';
 import Image from '~/components/Image/Image';
 import { followAction, unfollowAction } from '~/redux/slice/followingSlice';
+import { useNavigate } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 
@@ -22,6 +23,8 @@ function Profile() {
     const info = useSelector(getUsertByUserName);
     const dispatch = useDispatch();
     const location = useLocation();
+    const navigate = useNavigate();
+
     // console.log(location.pathname, 'location.pathname');
     // console.log(info, 'info');
 
@@ -123,6 +126,9 @@ function Profile() {
                                     poster={video.thumb_url}
                                     onMouseOver={handlePlay}
                                     onMouseOut={handlePause}
+                                    onClick={() => {
+                                        navigate(`/@${video.user.nickname}/video/${video.uuid}`);
+                                    }}
                                 ></video>
                             );
                         })}

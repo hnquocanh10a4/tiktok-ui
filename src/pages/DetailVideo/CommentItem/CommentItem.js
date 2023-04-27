@@ -8,9 +8,9 @@ import { Wrapper as PopperWrapper } from '~/components/Popper';
 import Button from '~/components/Button/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan, faHeart as faHeartR, faFlag } from '@fortawesome/free-regular-svg-icons';
-import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsis, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteCommentdAction } from '~/redux/slice/commentSlice';
+import { deleteCommentdAction, likeCommentdAction, unlikeCommentdAction } from '~/redux/slice/commentSlice';
 import { getCurrentUserSelector } from '~/redux/selectors';
 import { toast } from 'react-toastify';
 
@@ -102,7 +102,23 @@ export default function CommentItem({ data, videoId }) {
                 </Tippy>
 
                 <div className={cx('comment-container-info-icon-heart')}>
-                    <FontAwesomeIcon icon={faHeartR} />
+                    {!data.is_liked ? (
+                        <FontAwesomeIcon
+                            icon={faHeartR}
+                            onClick={() => {
+                                dispatch(likeCommentdAction({ id: data.id, uuid: videoId }));
+                            }}
+                        />
+                    ) : (
+                        <FontAwesomeIcon
+                            className={cx('comment-container-info-icon-heart-font')}
+                            icon={faHeart}
+                            onClick={() => {
+                                dispatch(unlikeCommentdAction({ id: data.id, uuid: videoId }));
+                            }}
+                        />
+                    )}
+
                     <span>{data?.likes_count}</span>
                 </div>
             </div>

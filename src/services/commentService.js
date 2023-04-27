@@ -43,3 +43,29 @@ export const deleteComment = async (id) => {
         console.log(error);
     }
 };
+
+export const likeComment = async (uuid) => {
+    try {
+        const res = await httprequest.post(`comments/${uuid}/like`, null, {
+            headers: {
+                Authorization: `${localStorage.getItem(TOKEN)}`,
+            },
+        });
+        return res.data;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const unlikeComment = async (uuid) => {
+    try {
+        const res = await httprequest.post(`comments/${uuid}/unlike`, null, {
+            headers: {
+                Authorization: `${localStorage.getItem(TOKEN)}`,
+            },
+        });
+        return res.data;
+    } catch (error) {
+        console.log(error);
+    }
+};

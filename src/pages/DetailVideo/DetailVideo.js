@@ -5,12 +5,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
     getCommentByIdSelector,
     getFollowingListSelector,
+    getVideoListAllSelector,
     getVideoListSelector,
     getVolumeSelector,
 } from '~/redux/selectors';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-import homeSlice, { getVideolist, likeAction, unlikeAction } from '~/redux/slice/homeSlice';
+import homeSlice, { getVideolist, getVideolistAll, likeAction, unlikeAction } from '~/redux/slice/homeSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faAt,
@@ -60,7 +61,7 @@ export default function DetailVideo() {
         video.current.volume = volume;
     }
 
-    const videoList = useSelector(getVideoListSelector);
+    const videoList = useSelector(getVideoListAllSelector);
     const followingList = useSelector(getFollowingListSelector);
     const commentList = useSelector(getCommentByIdSelector);
     console.log(commentList, 'commentList');
@@ -81,7 +82,7 @@ export default function DetailVideo() {
     let follow = false;
 
     followingList.forEach((user) => {
-        if (user.id === data.user.id) {
+        if (user?.id === data?.user?.id) {
             follow = true;
         }
     });
@@ -91,7 +92,8 @@ export default function DetailVideo() {
     // console.log(videoList, 'videoList: ');
     // console.log(followingList, 'followingList: ');
     useEffect(() => {
-        dispatch(getVideolist(page));
+        // dispatch(getVideolist(page));
+        dispatch(getVideolistAll());
         dispatch(getCommentByIdAction(videoId));
     }, [page, dispatch, videoId]);
 

@@ -13,3 +13,16 @@ export const getVideolist = async (page) => {
         console.log(error);
     }
 };
+
+export const getVideolistAll = async (page) => {
+    try {
+        const res = await httprequest.get(`videos?type=for-you&page=${page}`, {
+            headers: {
+                Authorization: `${localStorage.getItem(TOKEN)}`,
+            },
+        });
+        return res;
+    } catch (error) {
+        console.log(error);
+    }
+};

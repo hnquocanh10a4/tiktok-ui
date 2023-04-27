@@ -209,7 +209,12 @@ function PostItem({ data, followingList }) {
                                 <FontAwesomeIcon icon={faHeart} className={cx('icon', { stateHeart })} />
                             </button>
                             <span className={cx('quantity')}>{data.likes_count}</span>
-                            <button className={cx('wrap-icon')}>
+                            <button
+                                className={cx('wrap-icon')}
+                                onClick={() => {
+                                    navigate(`/@${data.user.nickname}/video/${data.uuid}`);
+                                }}
+                            >
                                 <FontAwesomeIcon icon={faCommentDots} className={cx('icon')} />
                             </button>
                             <span className={cx('quantity')}>{data.comments_count}</span>

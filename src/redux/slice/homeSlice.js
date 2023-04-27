@@ -6,6 +6,7 @@ const homeSlice = createSlice({
     name: 'home',
     initialState: {
         videoList: [],
+        videoListAll: [],
         volume: 0,
     },
     reducers: {
@@ -37,6 +38,9 @@ const homeSlice = createSlice({
 
                 const index = state.videoList.findIndex((item) => item.uuid === action.payload.data.uuid);
                 state.videoList[index] = action.payload.data;
+            })
+            .addCase(getVideolistAll.fulfilled, (state, action) => {
+                state.videoListAll = action.payload;
             });
     },
 });
@@ -45,6 +49,20 @@ export const getVideolist = createAsyncThunk('home/getVideolist', async (page) =
     const result = await videoService.getVideolist(page);
     console.log('da goi lai', result);
     return result;
+});
+
+export const getVideolistAll = createAsyncThunk('home/getVideolistAll', async () => {
+    let listResult = [];
+    const result = await videoService.getVideolistAll(1);
+
+    const totalPages = result.meta.pagination.total_pages;
+    // const totalPages = 5;
+    for (let page = 1; page < totalPages + 1; page++) {
+        const result = await videoService.getVideolistAll(page);
+        listResult = [...listResult, ...result.data];
+    }
+    console.log('result getVideolistAll', listResult);
+    return listResult;
 });
 
 export const likeAction = createAsyncThunk('home/likeAction', async (id, thunkApi) => {
