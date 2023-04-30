@@ -116,6 +116,7 @@ function Profile() {
                     <div className={cx('content-video')}>
                         {info?.videos?.map((video, index) => {
                             return (
+                                // <Link to={`/@${video.user.nickname}/video/${video.uuid}`}>
                                 <video
                                     muted
                                     key={index}
@@ -127,9 +128,12 @@ function Profile() {
                                     onMouseOver={handlePlay}
                                     onMouseOut={handlePause}
                                     onClick={() => {
-                                        navigate(`/@${video.user.nickname}/video/${video.uuid}`);
+                                        navigate(`/@${video.user.nickname}/video/${video.uuid}`, {
+                                            state: { from: 'profilePage' },
+                                        });
                                     }}
                                 ></video>
+                                // </Link>
                             );
                         })}
                     </div>

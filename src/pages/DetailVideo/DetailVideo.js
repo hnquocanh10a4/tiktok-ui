@@ -5,13 +5,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
     getCommentByIdSelector,
     getFollowingListSelector,
-    getVideoListAllSelector,
+    getUsertByUserName,
     getVideoListSelector,
     getVolumeSelector,
 } from '~/redux/selectors';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-import homeSlice, { getVideolist, getVideolistAll, likeAction, unlikeAction } from '~/redux/slice/homeSlice';
+import homeSlice, { getVideolist, likeAction, unlikeAction } from '~/redux/slice/homeSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faAt,
@@ -32,6 +32,7 @@ import { toast } from 'react-toastify';
 import CommentItem from './CommentItem/CommentItem';
 import { commentdAction, getCommentByIdAction } from '~/redux/slice/commentSlice';
 import { faFaceSmile } from '@fortawesome/free-regular-svg-icons';
+import { getUserProfile } from '~/redux/slice/userSlice';
 
 const cx = classNames.bind(styles);
 
@@ -52,6 +53,12 @@ export default function DetailVideo() {
     const location = useLocation();
     const splitPath = location.pathname.split('/');
     const videoId = splitPath[splitPath.length - 1];
+    const userId = splitPath[1];
+
+    console.log(userId, 'userId');
+    // const previousPathname = location.state?.from?.pathname; // Lấy đường dẫn của trang trước đó từ thuộc tính state
+    // console.log(previousPathname, 'previousPathname');
+    console.log(location.state, 'previousPathname1'); // Lấy đường dẫn của trang trước đó từ thuộc tính state
 
     //post video
 
@@ -61,7 +68,18 @@ export default function DetailVideo() {
         video.current.volume = volume;
     }
 
-    const videoList = useSelector(getVideoListAllSelector);
+    let videoList = '';
+    const videoListByPage = useSelector(getVideoListSelector);
+    const videoListByUser = useSelector(getUsertByUserName).videos;
+    console.log(videoListByPage, 'videoListByPage');
+    if (location.state === null) {
+        videoList = videoListByPage;
+        // console.log('null ne', videoList);
+    } else {
+        videoList = videoListByUser;
+        // console.log('ko null ne', videoList);
+    }
+
     const followingList = useSelector(getFollowingListSelector);
     const commentList = useSelector(getCommentByIdSelector);
     console.log(commentList, 'commentList');
@@ -93,7 +111,11 @@ export default function DetailVideo() {
     // console.log(followingList, 'followingList: ');
     useEffect(() => {
         // dispatch(getVideolist(page));
-        dispatch(getVideolistAll());
+
+        dispatch(getVideolist());
+
+        dispatch(getUserProfile(`/${userId}`));
+
         dispatch(getCommentByIdAction(videoId));
     }, [page, dispatch, videoId]);
 
@@ -222,7 +244,13 @@ export default function DetailVideo() {
                             onClick={() => {
                                 count--;
                                 data = videoList[count];
-                                navigate(`/@${data.user.nickname}/video/${data.uuid}`);
+                                if (location.state === null) {
+                                    navigate(`/@${data.user.nickname}/video/${data.uuid}`);
+                                } else {
+                                    navigate(`/@${data.user.nickname}/video/${data.uuid}`, {
+                                        state: { from: 'profilePage' },
+                                    });
+                                }
                             }}
                         />
                     ) : (
@@ -237,7 +265,13 @@ export default function DetailVideo() {
                                     count++;
                                     data = videoList[count];
                                     console.log(data, 'data ++');
-                                    navigate(`/@${data?.user?.nickname}/video/${data?.uuid}`);
+                                    if (location.state === null) {
+                                        navigate(`/@${data.user.nickname}/video/${data.uuid}`);
+                                    } else {
+                                        navigate(`/@${data.user.nickname}/video/${data.uuid}`, {
+                                            state: { from: 'profilePage' },
+                                        });
+                                    }
                                 }
                             }}
                         />
