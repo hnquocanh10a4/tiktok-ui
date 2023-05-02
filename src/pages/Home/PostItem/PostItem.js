@@ -19,8 +19,9 @@ import Image from '~/components/Image/Image';
 import useElementOnScreen from '~/hooks/useElementOnScreen';
 import { followAction, unfollowAction } from '~/redux/slice/followingSlice';
 import homeSlice, { likeAction, unlikeAction } from '~/redux/slice/homeSlice';
-import { getVolumeSelector } from '~/redux/selectors';
+import { getCurrentUserSelector, getVolumeSelector } from '~/redux/selectors';
 import { Link, useNavigate } from 'react-router-dom';
+import authenticationSlice from '~/redux/slice/authenticationSlice';
 
 const cx = classNames.bind(styles);
 
@@ -56,6 +57,11 @@ function PostItem({ data, followingList }) {
 
     // console.log(followingList, 'followingList');
     // console.log(data, 'data');
+
+    // get current user hidden follow btn when user is owner
+    const currentUser = useSelector(getCurrentUserSelector);
+
+    // console.log(currentUser, 'currentUser');
 
     const dispatch = useDispatch();
 
@@ -203,7 +209,13 @@ function PostItem({ data, followingList }) {
                             <button
                                 className={cx('wrap-icon')}
                                 onClick={() => {
-                                    stateHeart ? dispatch(unlikeAction(data.uuid)) : dispatch(likeAction(data.uuid));
+                                    if (Object.keys(currentUser)?.length !== 0) {
+                                        stateHeart
+                                            ? dispatch(unlikeAction(data.uuid))
+                                            : dispatch(likeAction(data.uuid));
+                                    } else {
+                                        dispatch(authenticationSlice.actions.openpopUpForm());
+                                    }
                                 }}
                             >
                                 <FontAwesomeIcon icon={faHeart} className={cx('icon', { stateHeart })} />
@@ -227,17 +239,25 @@ function PostItem({ data, followingList }) {
                 </div>
             </div>
             <div>
-                <Button
-                    small
-                    outline
-                    className={cx('btn-follow', { follow })}
-                    // text={follow}
-                    onClick={() => {
-                        follow ? dispatch(unfollowAction(data.user.id)) : dispatch(followAction(data.user.id));
-                    }}
-                >
-                    {follow ? 'Following' : 'Follow'}
-                </Button>
+                {data.user.id === currentUser.id ? (
+                    ''
+                ) : (
+                    <Button
+                        small
+                        outline
+                        className={cx('btn-follow', { follow })}
+                        // text={follow}
+                        onClick={() => {
+                            if (Object.keys(currentUser)?.length !== 0) {
+                                follow ? dispatch(unfollowAction(data.user.id)) : dispatch(followAction(data.user.id));
+                            } else {
+                                dispatch(authenticationSlice.actions.openpopUpForm());
+                            }
+                        }}
+                    >
+                        {follow ? 'Following' : 'Follow'}
+                    </Button>
+                )}
             </div>
         </div>
     );

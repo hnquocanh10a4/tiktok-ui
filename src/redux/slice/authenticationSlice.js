@@ -64,6 +64,7 @@ export const signUp = createAsyncThunk('authentication/signUp', async (data, thu
 
 export const logOut = createAsyncThunk('authentication/logOut', async () => {
     await authService.logOut();
+    window.location.reload();
 });
 
 export default authenticationSlice;

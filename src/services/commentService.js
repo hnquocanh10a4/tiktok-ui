@@ -6,7 +6,9 @@ export const getCommentById = async (uuid) => {
     try {
         const res = await httprequest.get(`videos/${uuid}/comments`, {
             headers: {
-                Authorization: `${localStorage.getItem(TOKEN)}`,
+                // Authorization: `${localStorage.getItem(TOKEN)}`,
+                //fake token
+                Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC90aWt0b2suZnVsbHN0YWNrLmVkdS52blwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTY4Mjk5OTEzMiwiZXhwIjoxNjg1NTkxMTMyLCJuYmYiOjE2ODI5OTkxMzIsImp0aSI6IjVaVUoxbHVJTFBjMDBEYnciLCJzdWIiOjUzNDcsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.7fu9v2oiVecLD2mfmYsNri3vwA3E-rjp1MBAf5KiI88`,
             },
         });
         return res;

@@ -3,13 +3,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames/bind';
 import Button from '../Button';
 import styles from './InfoItem.module.scss';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { followAction, unfollowAction } from '~/redux/slice/followingSlice';
+import authenticationSlice from '~/redux/slice/authenticationSlice';
+import { getCurrentUserSelector } from '~/redux/selectors';
 
 const cx = classNames.bind(styles);
 
 function InfoItem({ data, followingList }) {
     // only style inline can be used
+    const currentUser = useSelector(getCurrentUserSelector);
+
     const dispatch = useDispatch();
     const styles = {
         display: 'flex',
@@ -36,7 +40,11 @@ function InfoItem({ data, followingList }) {
                     outline={follow}
                     small
                     onClick={() => {
-                        follow ? dispatch(unfollowAction(data.id)) : dispatch(followAction(data.id));
+                        if (Object.keys(currentUser)?.length !== 0) {
+                            follow ? dispatch(unfollowAction(data.id)) : dispatch(followAction(data.id));
+                        } else {
+                            dispatch(authenticationSlice.actions.openpopUpForm());
+                        }
                     }}
                 >
                     {follow ? 'Following' : 'Follow'}

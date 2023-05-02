@@ -38,6 +38,7 @@ export const postVideo = async (data) => {
                 Accept: 'application/json',
             },
         });
+
         toast.success('Đăng video thành công');
 
         return res.data;

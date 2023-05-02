@@ -4,6 +4,7 @@ import classNames from 'classnames/bind';
 import { useSelector, useDispatch } from 'react-redux';
 import {
     getCommentByIdSelector,
+    getCurrentUserSelector,
     getFollowingListSelector,
     getUsertByUserName,
     getVideoListSelector,
@@ -33,15 +34,18 @@ import CommentItem from './CommentItem/CommentItem';
 import { commentdAction, getCommentByIdAction } from '~/redux/slice/commentSlice';
 import { faFaceSmile } from '@fortawesome/free-regular-svg-icons';
 import { getUserProfile } from '~/redux/slice/userSlice';
+import authenticationSlice from '~/redux/slice/authenticationSlice';
 
 const cx = classNames.bind(styles);
 
 export default function DetailVideo() {
-    const [page, setPage] = useState(1);
+    // const [page, setPage] = useState(1);
     const [isPlay, setIsPlay] = useState(false);
     const [comment, setComment] = useState('');
     // console.log(comment, 'comment');
     // const [data, setData] = useState({});
+
+    const currentUser = useSelector(getCurrentUserSelector);
 
     const video = useRef();
 
@@ -117,7 +121,7 @@ export default function DetailVideo() {
         dispatch(getUserProfile(`/${userId}`));
 
         dispatch(getCommentByIdAction(videoId));
-    }, [page, dispatch, videoId]);
+    }, [dispatch, videoId]);
 
     const handlePlay = () => {
         video.current.play();
@@ -131,7 +135,7 @@ export default function DetailVideo() {
 
     const renderComment = () => {
         return commentList?.map((comment, index) => {
-            return <CommentItem key={index} data={comment} videoId={videoId} />;
+            return <CommentItem key={index} data={comment} videoId={videoId} currentUser={currentUser} />;
         });
     };
 
@@ -298,16 +302,26 @@ export default function DetailVideo() {
                         </div>
                     </div>
                     <div>
-                        <Button
-                            outline
-                            className={cx('btn-follow', { follow })}
-                            // text={follow}
-                            onClick={() => {
-                                follow ? dispatch(unfollowAction(data.user.id)) : dispatch(followAction(data.user.id));
-                            }}
-                        >
-                            {follow ? 'Following' : 'Follow'}
-                        </Button>
+                        {data?.user?.id === currentUser.id ? (
+                            ''
+                        ) : (
+                            <Button
+                                outline
+                                className={cx('btn-follow', { follow })}
+                                // text={follow}
+                                onClick={() => {
+                                    if (Object.keys(currentUser)?.length !== 0) {
+                                        follow
+                                            ? dispatch(unfollowAction(data.user.id))
+                                            : dispatch(followAction(data.user.id));
+                                    } else {
+                                        dispatch(authenticationSlice.actions.openpopUpForm());
+                                    }
+                                }}
+                            >
+                                {follow ? 'Following' : 'Follow'}
+                            </Button>
+                        )}
                     </div>
                 </div>
                 <span className={cx('caption')}>{data?.description}</span>
@@ -318,7 +332,13 @@ export default function DetailVideo() {
                             <button
                                 className={cx('wrap-icon')}
                                 onClick={() => {
-                                    stateHeart ? dispatch(unlikeAction(data.uuid)) : dispatch(likeAction(data.uuid));
+                                    if (Object.keys(currentUser)?.length !== 0) {
+                                        stateHeart
+                                            ? dispatch(unlikeAction(data.uuid))
+                                            : dispatch(likeAction(data.uuid));
+                                    } else {
+                                        dispatch(authenticationSlice.actions.openpopUpForm());
+                                    }
                                 }}
                             >
                                 <FontAwesomeIcon icon={faHeart} className={cx('icon', { stateHeart })} />
@@ -350,7 +370,13 @@ export default function DetailVideo() {
                 </div>
                 {/* comment */}
                 {/* <CommentItem data={data} /> */}
-                <div className={cx('comment-wrap')}>{renderComment()}</div>
+                <div className={cx('comment-wrap')}>
+                    {commentList.length === 0 ? (
+                        <p className={cx('title-no-comment')}>Hãy là người đầu tiên bình luận</p>
+                    ) : (
+                        renderComment()
+                    )}
+                </div>
 
                 <div>
                     <form
@@ -362,25 +388,39 @@ export default function DetailVideo() {
                             setComment('');
                         }}
                     >
-                        <div className={cx('comment-input-wrap')}>
-                            <input
-                                type="text"
-                                value={comment}
-                                name="comment"
-                                className={cx('comment-input')}
-                                placeholder="Comment ..."
-                                onChange={(e) => {
-                                    setComment(e.target.value);
+                        {Object.keys(currentUser)?.length === 0 ? (
+                            <Button
+                                outline
+                                className={cx('btn-login-comment')}
+                                onClick={() => {
+                                    dispatch(authenticationSlice.actions.openpopUpForm());
                                 }}
-                            />
-                            <div className={cx('comment-icon-wrap')}>
-                                <FontAwesomeIcon className={cx('comment-icon-item')} icon={faAt} />
-                                <FontAwesomeIcon className={cx('comment-icon-item')} icon={faFaceSmile} />
-                            </div>
-                        </div>
-                        <Button text disabled={comment === ''}>
-                            Post
-                        </Button>
+                            >
+                                Đăng nhập để bình luận
+                            </Button>
+                        ) : (
+                            <>
+                                <div className={cx('comment-input-wrap')}>
+                                    <input
+                                        type="text"
+                                        value={comment}
+                                        name="comment"
+                                        className={cx('comment-input')}
+                                        placeholder="Comment ..."
+                                        onChange={(e) => {
+                                            setComment(e.target.value);
+                                        }}
+                                    />
+                                    <div className={cx('comment-icon-wrap')}>
+                                        <FontAwesomeIcon className={cx('comment-icon-item')} icon={faAt} />
+                                        <FontAwesomeIcon className={cx('comment-icon-item')} icon={faFaceSmile} />
+                                    </div>
+                                </div>
+                                <Button text disabled={comment === ''}>
+                                    Post
+                                </Button>
+                            </>
+                        )}
                     </form>
                 </div>
             </div>

@@ -139,7 +139,14 @@ function Header() {
                         </>
                     ) : (
                         <>
-                            <Button text>Upload</Button>
+                            <Button
+                                text
+                                onClick={() => {
+                                    handleOpenLogin();
+                                }}
+                            >
+                                Upload
+                            </Button>
                             <Button
                                 onClick={() => {
                                     handleOpenLogin();

@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { postVideoAction } from '~/redux/slice/uploadSlice';
 
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 
@@ -17,6 +18,8 @@ export default function Upload() {
     const [selectedVideo, setSelectedVideo] = useState(null);
     const [videoUrl, setVideoUrl] = useState('');
     const inputFile = useRef();
+
+    const navigate = useNavigate();
 
     const formik = useFormik({
         initialValues: {
@@ -27,22 +30,16 @@ export default function Upload() {
             stitch: true,
             thumbnail_time: '',
         },
-        onSubmit: (values) => {
-            dispatch(
+        onSubmit: async (values) => {
+            await dispatch(
                 postVideoAction({
                     ...values,
                     upload_file: selectedVideo,
                     allows: [values.comment ? 'comment' : '', values.duet ? 'duet' : '', values.stitch ? 'stitch' : ''],
                 }),
             );
-            console.log(
-                {
-                    ...values,
-                    upload_file: selectedVideo,
-                    allows: [values.comment ? 'comment' : '', values.duet ? 'duet' : '', values.stitch ? 'stitch' : ''],
-                },
-                'datasend',
-            );
+            await navigate('/');
+            window.location.reload();
         },
     });
     // console.log(inputFile.current.target, 'inputFile.current');

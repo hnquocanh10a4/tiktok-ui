@@ -9,21 +9,21 @@ import Button from '~/components/Button/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan, faHeart as faHeartR, faFlag } from '@fortawesome/free-regular-svg-icons';
 import { faEllipsis, faHeart } from '@fortawesome/free-solid-svg-icons';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { deleteCommentdAction, likeCommentdAction, unlikeCommentdAction } from '~/redux/slice/commentSlice';
-import { getCurrentUserSelector } from '~/redux/selectors';
 import { toast } from 'react-toastify';
+import authenticationSlice from '~/redux/slice/authenticationSlice';
 
 const cx = classNames.bind(styles);
 
-export default function CommentItem({ data, videoId }) {
+export default function CommentItem({ data, videoId, currentUser }) {
     const [hiddenMoreBtn, setHiddenMoreBtn] = useState(true);
-    console.log(data, 'data id');
-    console.log(videoId, 'data videoId');
+    // console.log(data, 'data id');
+    // console.log(videoId, 'data videoId');
     const dispatch = useDispatch();
 
-    const currentUser = useSelector(getCurrentUserSelector);
-    console.log(currentUser, 'currentUser');
+    // const currentUser = useSelector(getCurrentUserSelector);
+    // console.log(currentUser, 'currentUser');
 
     return (
         <div className={cx('comment-container')}>
@@ -62,13 +62,13 @@ export default function CommentItem({ data, videoId }) {
                         <div {...attrs}>
                             <PopperWrapper>
                                 <div className={cx('wrap-detele-edit-button')}>
-                                    {currentUser.id === data.user.id ? (
+                                    {currentUser.id === data?.user.id ? (
                                         <Button
                                             className={cx('detele-edit-button')}
                                             text
                                             leftIcon={<FontAwesomeIcon icon={faTrashCan} />}
                                             onClick={() => {
-                                                dispatch(deleteCommentdAction({ id: data.id, uuid: videoId }));
+                                                dispatch(deleteCommentdAction({ id: data?.id, uuid: videoId }));
                                             }}
                                         >
                                             Delete
@@ -102,11 +102,15 @@ export default function CommentItem({ data, videoId }) {
                 </Tippy>
 
                 <div className={cx('comment-container-info-icon-heart')}>
-                    {!data.is_liked ? (
+                    {!data?.is_liked ? (
                         <FontAwesomeIcon
                             icon={faHeartR}
                             onClick={() => {
-                                dispatch(likeCommentdAction({ id: data.id, uuid: videoId }));
+                                if (Object.keys(currentUser)?.length !== 0) {
+                                    dispatch(likeCommentdAction({ id: data?.id, uuid: videoId }));
+                                } else {
+                                    dispatch(authenticationSlice.actions.openpopUpForm());
+                                }
                             }}
                         />
                     ) : (
@@ -114,7 +118,11 @@ export default function CommentItem({ data, videoId }) {
                             className={cx('comment-container-info-icon-heart-font')}
                             icon={faHeart}
                             onClick={() => {
-                                dispatch(unlikeCommentdAction({ id: data.id, uuid: videoId }));
+                                if (Object.keys(currentUser)?.length !== 0) {
+                                    dispatch(unlikeCommentdAction({ id: data?.id, uuid: videoId }));
+                                } else {
+                                    dispatch(authenticationSlice.actions.openpopUpForm());
+                                }
                             }}
                         />
                     )}

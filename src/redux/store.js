@@ -6,6 +6,8 @@ import homeSlice from '~/redux/slice/homeSlice';
 import userSlice from '~/redux/slice/userSlice';
 import followingSlice from './slice/followingSlice';
 import commentSlice from './slice/commentSlice';
+import loadingSlice from './slice/loadingSlice';
+import uploadSlice from './slice/uploadSlice';
 
 const store = configureStore({
     reducer: {
@@ -16,6 +18,8 @@ const store = configureStore({
         profile: userSlice.reducer,
         following: followingSlice.reducer,
         comment: commentSlice.reducer,
+        upload: uploadSlice.reducer,
+        loading: loadingSlice.reducer,
     },
 });
 

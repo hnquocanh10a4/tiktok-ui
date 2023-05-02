@@ -8,11 +8,12 @@ import { faCheckCircle, faVideoSlash } from '@fortawesome/free-solid-svg-icons';
 import Button from '~/components/Button';
 import { LookIcon } from '~/components/Icon';
 import { useSelector, useDispatch } from 'react-redux';
-import { getFollowingListSelector, getUsertByUserName } from '~/redux/selectors';
+import { getCurrentUserSelector, getFollowingListSelector, getUsertByUserName } from '~/redux/selectors';
 import { getUserProfile } from '../../redux/slice/userSlice';
 import Image from '~/components/Image/Image';
 import { followAction, unfollowAction } from '~/redux/slice/followingSlice';
 import { useNavigate } from 'react-router-dom';
+import authenticationSlice from '~/redux/slice/authenticationSlice';
 
 const cx = classNames.bind(styles);
 
@@ -24,6 +25,8 @@ function Profile() {
     const dispatch = useDispatch();
     const location = useLocation();
     const navigate = useNavigate();
+
+    const currentUser = useSelector(getCurrentUserSelector);
 
     // console.log(location.pathname, 'location.pathname');
     // console.log(info, 'info');
@@ -67,7 +70,11 @@ function Profile() {
                         primary
                         className={cx('btn-follow', { primary: !follow, outline: follow })}
                         onClick={() => {
-                            follow ? dispatch(unfollowAction(info.id)) : dispatch(followAction(info.id));
+                            if (Object.keys(currentUser)?.length !== 0) {
+                                follow ? dispatch(unfollowAction(info.id)) : dispatch(followAction(info.id));
+                            } else {
+                                dispatch(authenticationSlice.actions.openpopUpForm());
+                            }
                         }}
                     >
                         {follow ? 'Unfollow' : 'Follow'}

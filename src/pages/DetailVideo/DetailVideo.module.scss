@@ -359,6 +359,10 @@
     overflow: auto;
 }
 
+.title-no-comment {
+    text-align: center;
+}
+
 .comment-container {
     display: flex;
     justify-content: space-between;
@@ -443,4 +447,10 @@
 
 .date-comment {
     color: rgba(22, 24, 35, 0.5);
+}
+
+.btn-login-comment {
+    margin-top: 20px;
+    width: 100%;
+    padding: 10px;
 }

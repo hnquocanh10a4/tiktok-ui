@@ -10,3 +10,5 @@ export const getOpenLoginFormSelector = (state) => state.authentication.loginFor
 export const getUsertByUserName = (state) => state.profile.userProfile;
 export const getFollowingListSelector = (state) => state.following.followingList;
 export const getCommentByIdSelector = (state) => state.comment.listComment;
+// export const getLoadingSelector = (state) => state.loading.loading;
+export const getLoadingSelector = (state) => state.upload.loading;
