@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authenticationSlice from '~/redux/slice/authenticationSlice';
 import searchSlice from '~/redux/slice/searchSlice.js';
-import sideBarSlice from '~/layouts/component/SideBar/sideBarSlice';
+import sideBarSlice from '~/redux/slice/sideBarSlice';
 import homeSlice from '~/redux/slice/homeSlice';
 import userSlice from '~/redux/slice/userSlice';
 import followingSlice from './slice/followingSlice';

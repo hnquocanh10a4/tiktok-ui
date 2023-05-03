@@ -59,6 +59,7 @@ export const signIn = createAsyncThunk('authentication/signIn', async (data) => 
 export const signUp = createAsyncThunk('authentication/signUp', async (data, thunkAPI) => {
     const result = await authService.signUp({ ...data, type: 'email' });
     thunkAPI.dispatch(authenticationSlice.actions.openLoginForm());
+    // await window.location.reload();
     return result;
 });
 

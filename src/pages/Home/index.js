@@ -13,9 +13,11 @@ const cx = classNames.bind(styles);
 function Home() {
     const [page, setPage] = useState(1);
 
-    const videoList = useSelector(getVideoListSelector);
+    let videoList = useSelector(getVideoListSelector);
     const followingList = useSelector(getFollowingListSelector);
     console.log(videoList, 'videoList');
+    // console.log(location.pathname, 'location.pathname');
+
     // console.log(followingList, 'followingList');
     const dispatch = useDispatch();
 

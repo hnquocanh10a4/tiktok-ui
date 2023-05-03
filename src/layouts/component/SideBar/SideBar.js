@@ -16,8 +16,9 @@ import * as searchService from '~/services/searchService';
 import AccountItem from '~/components/AccountItem';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSuggesedUserSelector } from '~/redux/selectors';
-import { getSuggesedUser } from './sideBarSlice';
+import { getSuggesedUser } from '../../../redux/slice/sideBarSlice';
 import Button from '~/components/Button/Button';
+import { toast } from 'react-toastify';
 
 const cx = classNames.bind(styles);
 
@@ -51,7 +52,16 @@ function Sidebar() {
                     icon={<UserGroupIcon />}
                     activeIcon={<UserGroupActiveIcon />}
                 />
-                <MenuItem title="LIVE" to={config.routes.live} icon={<LiveIcon />} activeIcon={<LiveActiveIcon />} />
+                {/* <MenuItem title="LIVE" to={config.routes.live} icon={<LiveIcon />} activeIcon={<LiveActiveIcon />} /> */}
+                <div
+                    className={cx('menu-item')}
+                    onClick={() => {
+                        toast.error('Chức năng hiện chưa khả dụng');
+                    }}
+                >
+                    <span className={cx('icon')}>{<LiveIcon />}</span>
+                    <span className={cx('title')}>LIVE</span>
+                </div>
                 <div className={cx('separate')}>
                     <h4>Suggested accounts</h4>
                     {suggestAccount?.map((item) => {

@@ -9,6 +9,7 @@ import Upload from '~/pages/Upload';
 import Search from '~/pages/Search/Search';
 import LogOut from '~/components/PopUp/LogOut/LogOut';
 import DetailVideo from '~/pages/DetailVideo/DetailVideo';
+import Following from '~/pages/Following';
 // import Live from '~/pages/Live';
 
 const publicRoutes = [
@@ -16,7 +17,7 @@ const publicRoutes = [
     // { path: config.routes.following, component: Following },
     // { path: config.routes.live, component: Live },
     // test with home page
-    { path: config.routes.following, component: Home },
+    { path: config.routes.following, component: Following },
     { path: config.routes.live, component: Home },
     { path: config.routes.detai, component: DetailVideo, layout: null },
     { path: config.routes.profile, component: Profile },

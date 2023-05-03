@@ -116,11 +116,11 @@ function PostItem({ data, followingList }) {
     return (
         <div className={cx('wrapper')}>
             <div className={cx('container')}>
-                <Link to={`@${data.user.nickname}`}>
+                <Link to={`/@${data.user.nickname}`}>
                     <Image src={data.user.avatar} alt={data.user.nickname} className={cx('avatar')} />
                 </Link>
                 <div className={cx('info')}>
-                    <Link to={`@${data.user.nickname}`}>
+                    <Link to={`/@${data.user.nickname}`}>
                         <div>
                             <span className={cx('username')}>{data.user.nickname}</span>
                             <span className={cx('name')}>

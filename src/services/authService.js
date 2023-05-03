@@ -6,7 +6,8 @@ export const signIn = async (data) => {
         console.log(data, 'data service');
 
         const res = await httprequest.post('auth/login', data);
-        toast.success('Đăng nhập thành công!');
+        // await toast.success('Đăng nhập thành công!');
+        window.location.reload();
         return res.data;
     } catch (error) {
         toast.error('Vui lòng kiểm tra lại email hoặc mật khẩu');

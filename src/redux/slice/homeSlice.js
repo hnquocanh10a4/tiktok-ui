@@ -18,10 +18,20 @@ const homeSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(getVideolist.fulfilled, (state, action) => {
-                state.videoList = [
-                    ...state.videoList,
-                    ...action.payload.filter((item) => !state.videoList.some((a) => a.id === item.id)),
-                ];
+                // state.videoList = [
+                //     ...state.videoList,
+                //     ...action.payload.filter((item) => !state.videoList.some((a) => a.id === item.id)),
+                // ];
+                let tempt = [...state.videoList];
+                action.payload.forEach((item) => {
+                    const index = tempt.findIndex((elem) => elem.id === item.id);
+                    if (index !== -1) {
+                        tempt[index] = item;
+                    } else {
+                        tempt.push(item);
+                    }
+                });
+                state.videoList = tempt;
             })
             .addCase(likeAction.fulfilled, (state, action) => {
                 // console.log([...state.videoList, action.payload], 'kq');
