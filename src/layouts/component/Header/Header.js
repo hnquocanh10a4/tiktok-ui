@@ -23,8 +23,9 @@ import Menu from '~/components/Popper/Menu';
 import { InboxIcon, MessageIcon, UploadIcon } from '~/components/Icon';
 import Image from '~/components/Image';
 import Search from '~/components/Search';
-import authenticationSlice from '~/redux/slice/authenticationSlice';
+import authenticationSlice, { getCurrentUserAction } from '~/redux/slice/authenticationSlice';
 import { getCurrentUserSelector } from '~/redux/selectors';
+import { useEffect } from 'react';
 
 const cx = classNames.bind(styles);
 
@@ -34,8 +35,8 @@ const cx = classNames.bind(styles);
 function Header() {
     // const [currentUser, setCurrentUser] = useState(false);
     const currentUser = useSelector(getCurrentUserSelector);
-    console.log('currentUser', Object.keys(currentUser)?.length !== 0);
-    console.log('currentUserDetail', currentUser);
+    // console.log('currentUser', Object.keys(currentUser)?.length !== 0);
+    // console.log('currentUserDetail', currentUser);
     const dispatch = useDispatch();
 
     // if (Object.keys(user).length === 0) {
@@ -80,7 +81,7 @@ function Header() {
         {
             icon: <FontAwesomeIcon icon={faUser} />,
             title: 'View profile',
-            to: '/@hoaahanassii',
+            to: `/@${currentUser.nickname}`,
         },
         {
             icon: <FontAwesomeIcon icon={faCoins} />,
@@ -108,6 +109,10 @@ function Header() {
         dispatch(authenticationSlice.actions.openpopUpForm());
     };
 
+    // useEffect(() => {
+    //     dispatch(getCurrentUserAction());
+    // }, [currentUser]);
+
     return (
         <header className={cx('wrapper')}>
             <div className={cx('inner')}>
@@ -121,7 +126,7 @@ function Header() {
                         <>
                             <Tippy delay={[0, 100]} content="Upload video" placement="bottom">
                                 <button className={cx('action-btn')}>
-                                    <Link to="upload">
+                                    <Link to="/upload">
                                         <UploadIcon />
                                     </Link>
                                 </button>
@@ -159,7 +164,7 @@ function Header() {
                     )}
                     <Menu items={Object.keys(currentUser)?.length !== 0 ? useMenu : MENU_ITEM}>
                         {Object.keys(currentUser)?.length !== 0 ? (
-                            <Image className={cx('userAvatar')} src={currentUser.avatar} alt="avatar" />
+                            <Image className={cx('userAvatar')} src={currentUser?.avatar} alt="avatar" />
                         ) : (
                             <button className={cx('more-btn')}>
                                 <FontAwesomeIcon icon={faEllipsisVertical} />

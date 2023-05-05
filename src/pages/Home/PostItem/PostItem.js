@@ -141,7 +141,9 @@ function PostItem({ data, followingList }) {
                                 playsInline
                                 poster={data.thumb_url}
                                 onClick={() => {
-                                    navigate(`/@${data.user.nickname}/video/${data.uuid}`);
+                                    navigate(`/@${data.user.nickname}/video/${data.uuid}`, {
+                                        state: { from: 'homePage' },
+                                    });
                                 }}
                             ></video>
                             {/* check video is play ? and set onClick to toggle between play and pause */}

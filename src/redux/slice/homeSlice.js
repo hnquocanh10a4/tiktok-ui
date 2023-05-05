@@ -48,6 +48,9 @@ const homeSlice = createSlice({
 
                 const index = state.videoList.findIndex((item) => item.uuid === action.payload.data.uuid);
                 state.videoList[index] = action.payload.data;
+            })
+            .addCase(resetVideolist.fulfilled, (state, action) => {
+                state.videoList = action.payload;
             });
         // .addCase(getVideolistAll.fulfilled, (state, action) => {
         //     state.videoListAll = action.payload;
@@ -58,6 +61,11 @@ const homeSlice = createSlice({
 export const getVideolist = createAsyncThunk('home/getVideolist', async (page) => {
     const result = await videoService.getVideolist(page);
     console.log('da goi lai', result);
+    return result;
+});
+
+export const resetVideolist = createAsyncThunk('home/resetVideolist', async () => {
+    const result = await videoService.getVideolist();
     return result;
 });
 

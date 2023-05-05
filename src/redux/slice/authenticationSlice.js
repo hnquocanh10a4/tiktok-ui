@@ -12,6 +12,7 @@ const authenticationSlice = createSlice({
         userLogin: user,
         popUpForm: false,
         loginForm: true,
+        editProfileForm: false,
     },
     reducers: {
         openpopUpForm: (state, action) => {
@@ -25,6 +26,12 @@ const authenticationSlice = createSlice({
         },
         openRegisterForm: (state, action) => {
             state.loginForm = false;
+        },
+        openEditProfileForm: (state, action) => {
+            state.editProfileForm = true;
+        },
+        closeEditProfileForm: (state, action) => {
+            state.editProfileForm = false;
         },
     },
     extraReducers: (builder) => {
@@ -47,6 +54,16 @@ const authenticationSlice = createSlice({
                 localStorage.removeItem(USER_LOGIN);
                 localStorage.removeItem(TOKEN);
                 state.userLogin = {};
+            })
+            // .addCase(updateUserAction.fulfilled, (state, action) => {
+            //     console.log('user hien tai update', action.payload.data.data);
+
+            //     state.userLogin = action.payload;
+            // })
+            .addCase(getCurrentUserAction.fulfilled, (state, action) => {
+                console.log('user hien tai', JSON.stringify(action.payload.data.data));
+                localStorage.setItem(USER_LOGIN, JSON.stringify(action.payload.data.data));
+                state.userLogin = action.payload.data.data;
             });
     },
 });
@@ -66,6 +83,16 @@ export const signUp = createAsyncThunk('authentication/signUp', async (data, thu
 export const logOut = createAsyncThunk('authentication/logOut', async () => {
     await authService.logOut();
     window.location.reload();
+});
+
+export const updateUserAction = createAsyncThunk('authentication/updateUserAction', async (data, thunkAPI) => {
+    await authService.updateUser(data);
+    thunkAPI.dispatch(getCurrentUserAction());
+});
+
+export const getCurrentUserAction = createAsyncThunk('authentication/getCurrentUserAction', async () => {
+    const result = await authService.getCurrentUser();
+    return result;
 });
 
 export default authenticationSlice;

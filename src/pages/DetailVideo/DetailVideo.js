@@ -7,6 +7,7 @@ import {
     getCurrentUserSelector,
     getFollowingListSelector,
     getUsertByUserName,
+    getVideoLikedlistSelector,
     getVideoListSelector,
     getVolumeSelector,
 } from '~/redux/selectors';
@@ -19,9 +20,11 @@ import {
     faChevronDown,
     faChevronUp,
     faCommentDots,
+    faEllipsis,
     faHeart,
     faPause,
     faPlay,
+    faTrashCan,
     faVolumeHigh,
     faVolumeXmark,
     faXmark,
@@ -33,36 +36,37 @@ import { toast } from 'react-toastify';
 import CommentItem from './CommentItem/CommentItem';
 import { commentdAction, getCommentByIdAction } from '~/redux/slice/commentSlice';
 import { faFaceSmile } from '@fortawesome/free-regular-svg-icons';
-import { getUserProfile } from '~/redux/slice/userSlice';
+import { getUserProfile, getVideoLikedlistAction } from '~/redux/slice/userSlice';
 import authenticationSlice from '~/redux/slice/authenticationSlice';
+import Tippy from '@tippyjs/react/headless';
+import { Wrapper as PopperWrapper } from '~/components/Popper';
+import { deleteVideoAction } from '~/redux/slice/uploadSlice';
 
 const cx = classNames.bind(styles);
 
 export default function DetailVideo() {
-    // const [page, setPage] = useState(1);
     const [isPlay, setIsPlay] = useState(false);
     const [comment, setComment] = useState('');
-    // console.log(comment, 'comment');
-    // const [data, setData] = useState({});
-
-    const currentUser = useSelector(getCurrentUserSelector);
 
     const video = useRef();
 
     const dispatch = useDispatch();
-
     const navigate = useNavigate();
 
     //get uuid video
     const location = useLocation();
     const splitPath = location.pathname.split('/');
-    const videoId = splitPath[splitPath.length - 1];
-    const userId = splitPath[1];
+    const videoId = splitPath[splitPath.length - 1]; // id cua video
+    const userId = splitPath[1]; // nickname cua nguoi dang video
 
-    console.log(userId, 'userId');
-    // const previousPathname = location.state?.from?.pathname; // Lấy đường dẫn của trang trước đó từ thuộc tính state
-    // console.log(previousPathname, 'previousPathname');
-    console.log(location.state, 'previousPathname1'); // Lấy đường dẫn của trang trước đó từ thuộc tính state
+    // Lấy đường dẫn của trang trước đó từ thuộc tính state kiểm tra xem người dùng xem list video từ home, profile, liked
+    if (location.state?.from === 'likedPage') {
+        localStorage.setItem('prePage', 'likedPage');
+    } else if (location.state?.from === 'homePage') {
+        localStorage.setItem('prePage', 'homePage');
+    } else {
+        localStorage.setItem('prePage', 'profilePage');
+    }
 
     //post video
 
@@ -72,56 +76,61 @@ export default function DetailVideo() {
         video.current.volume = volume;
     }
 
+    // tạo mảng videolist chung
     let videoList = '';
-    const videoListByPage = useSelector(getVideoListSelector);
-    const videoListByUser = useSelector(getUsertByUserName).videos;
-    console.log(videoListByPage, 'videoListByPage');
-    if (location.state === null) {
+
+    const currentUser = useSelector(getCurrentUserSelector); // user hiện tại
+    const videoListByPage = useSelector(getVideoListSelector); // list video từ home
+    const videoListByUser = useSelector(getUsertByUserName).videos; // list video từ profile
+    const videoListByUserLiked = useSelector(getVideoLikedlistSelector); // list video từ liked
+    console.log(videoListByUserLiked, 'videoListByUserLiked');
+
+    // tùy vào trang trước của người dùng gán list video phù hợp
+    if (localStorage.getItem('prePage') === 'homePage') {
         videoList = videoListByPage;
-        // console.log('null ne', videoList);
+    } else if (localStorage.getItem('prePage') === 'likedPage') {
+        videoList = videoListByUserLiked;
     } else {
         videoList = videoListByUser;
-        // console.log('ko null ne', videoList);
     }
 
+    // lấy chi tiết 1 video
+    let data = {};
+
+    // lấy following và comment
     const followingList = useSelector(getFollowingListSelector);
     const commentList = useSelector(getCommentByIdSelector);
-    console.log(commentList, 'commentList');
 
-    // get video data
-    let data = {};
+    // lấy vị trí hiện tại của video trong list và lấy chi tiết video
     let count = -1;
-    videoList.forEach((element, index) => {
+
+    videoList?.forEach((element, index) => {
         if (element.uuid === videoId) {
-            // console.log(element, 'element');
             count = index;
             data = element;
         }
     });
 
-    console.log(data, 'data');
+    console.log(data, 'datadata');
+    console.log(videoListByUser, 'videoListByUser');
 
+    // kiểm tra có đang follow
     let follow = false;
-
     followingList.forEach((user) => {
         if (user?.id === data?.user?.id) {
             follow = true;
         }
     });
 
-    let stateHeart = data.is_liked;
+    // kiểm tra có đang tim
+    let stateHeart = data?.is_liked;
 
-    // console.log(videoList, 'videoList: ');
-    // console.log(followingList, 'followingList: ');
     useEffect(() => {
-        // dispatch(getVideolist(page));
-
+        dispatch(getVideoLikedlistAction(currentUser.id));
         dispatch(getVideolist());
-
         dispatch(getUserProfile(`/${userId}`));
-
         dispatch(getCommentByIdAction(videoId));
-    }, [dispatch, videoId]);
+    }, [dispatch, videoId, userId, currentUser]);
 
     const handlePlay = () => {
         video.current.play();
@@ -154,7 +163,11 @@ export default function DetailVideo() {
                         className={cx('icon-contain', 'close-icon')}
                         icon={faXmark}
                         onClick={() => {
-                            navigate('/');
+                            if (localStorage.getItem('prePage') === 'homePage') {
+                                navigate('/');
+                            } else {
+                                navigate(`/@${currentUser.nickname}`);
+                            }
                         }}
                     />
                 </div>
@@ -248,8 +261,14 @@ export default function DetailVideo() {
                             onClick={() => {
                                 count--;
                                 data = videoList[count];
-                                if (location.state === null) {
-                                    navigate(`/@${data.user.nickname}/video/${data.uuid}`);
+                                if (localStorage.getItem('prePage') === 'homePage') {
+                                    navigate(`/@${data.user.nickname}/video/${data.uuid}`, {
+                                        state: { from: 'homePage' },
+                                    });
+                                } else if (localStorage.getItem('prePage') === 'likedPage') {
+                                    navigate(`/@${data.user.nickname}/video/${data.uuid}`, {
+                                        state: { from: 'likedPage' },
+                                    });
                                 } else {
                                     navigate(`/@${data.user.nickname}/video/${data.uuid}`, {
                                         state: { from: 'profilePage' },
@@ -260,17 +279,23 @@ export default function DetailVideo() {
                     ) : (
                         ''
                     )}
-                    {count !== videoList.length - 1 ? (
+                    {count !== videoList?.length - 1 ? (
                         <FontAwesomeIcon
                             className={cx('icon-contain', 'down-icon')}
                             icon={faChevronDown}
                             onClick={() => {
-                                if (count < videoList.length) {
+                                if (count < videoList?.length) {
                                     count++;
                                     data = videoList[count];
                                     console.log(data, 'data ++');
-                                    if (location.state === null) {
-                                        navigate(`/@${data.user.nickname}/video/${data.uuid}`);
+                                    if (localStorage.getItem('prePage') === 'homePage') {
+                                        navigate(`/@${data.user.nickname}/video/${data.uuid}`, {
+                                            state: { from: 'homePage' },
+                                        });
+                                    } else if (localStorage.getItem('prePage') === 'likedPage') {
+                                        navigate(`/@${data.user.nickname}/video/${data.uuid}`, {
+                                            state: { from: 'likedPage' },
+                                        });
                                     } else {
                                         navigate(`/@${data.user.nickname}/video/${data.uuid}`, {
                                             state: { from: 'profilePage' },
@@ -303,7 +328,41 @@ export default function DetailVideo() {
                     </div>
                     <div>
                         {data?.user?.id === currentUser.id ? (
-                            ''
+                            <Tippy
+                                placement="left"
+                                render={(attrs) => (
+                                    <div {...attrs}>
+                                        <PopperWrapper>
+                                            <div className={cx('wrap-detele-edit-button')}>
+                                                <Button
+                                                    className={cx('detele-edit-button')}
+                                                    text
+                                                    leftIcon={<FontAwesomeIcon icon={faTrashCan} />}
+                                                    onClick={() => {
+                                                        //delete post
+                                                        dispatch(deleteVideoAction(data?.id));
+                                                        navigate(`/`);
+
+                                                        // dispatch(deleteCommentdAction({ id: data?.id, uuid: videoId }));
+                                                    }}
+                                                >
+                                                    Delete
+                                                </Button>
+                                            </div>
+                                        </PopperWrapper>
+                                    </div>
+                                )}
+                                hideOnClick={false}
+                                interactive={true}
+                                delay={[0, 500]}
+                            >
+                                <div>
+                                    <FontAwesomeIcon
+                                        className={cx('comment-container-info-icon-more')}
+                                        icon={faEllipsis}
+                                    />
+                                </div>
+                            </Tippy>
                         ) : (
                             <Button
                                 outline
@@ -329,21 +388,25 @@ export default function DetailVideo() {
                 <div>
                     <div className={cx('wrap-count-like-comment')}>
                         <div className={cx('wrap-like')}>
-                            <button
-                                className={cx('wrap-icon')}
-                                onClick={() => {
-                                    if (Object.keys(currentUser)?.length !== 0) {
-                                        stateHeart
-                                            ? dispatch(unlikeAction(data.uuid))
-                                            : dispatch(likeAction(data.uuid));
-                                    } else {
-                                        dispatch(authenticationSlice.actions.openpopUpForm());
-                                    }
-                                }}
-                            >
-                                <FontAwesomeIcon icon={faHeart} className={cx('icon', { stateHeart })} />
-                            </button>
-                            <span className={cx('quantity')}>{data.likes_count}</span>
+                            {localStorage.getItem('prePage') === 'homePage' && (
+                                <>
+                                    <button
+                                        className={cx('wrap-icon')}
+                                        onClick={() => {
+                                            if (Object.keys(currentUser)?.length !== 0) {
+                                                stateHeart
+                                                    ? dispatch(unlikeAction(data.uuid))
+                                                    : dispatch(likeAction(data.uuid));
+                                            } else {
+                                                dispatch(authenticationSlice.actions.openpopUpForm());
+                                            }
+                                        }}
+                                    >
+                                        <FontAwesomeIcon icon={faHeart} className={cx('icon', { stateHeart })} />
+                                    </button>
+                                    <span className={cx('quantity')}>{data.likes_count}</span>
+                                </>
+                            )}
                         </div>
                         <div className={cx('wrap-like')}>
                             <button className={cx('wrap-icon')}>
@@ -371,7 +434,7 @@ export default function DetailVideo() {
                 {/* comment */}
                 {/* <CommentItem data={data} /> */}
                 <div className={cx('comment-wrap')}>
-                    {commentList.length === 0 ? (
+                    {commentList?.length === 0 ? (
                         <p className={cx('title-no-comment')}>Hãy là người đầu tiên bình luận</p>
                     ) : (
                         renderComment()

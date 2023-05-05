@@ -16,6 +16,20 @@ export const getVideolist = async (page) => {
     }
 };
 
+// export const getAVideo = async (uuid) => {
+//     try {
+//         const res = await httprequest.get(`videos/${uuid}`, {
+//             headers: {
+//                 Authorization: `${localStorage.getItem(TOKEN)}`,
+//             },
+//         });
+
+//         return res.data;
+//     } catch (error) {
+//         console.log(error);
+//     }
+// };
+
 // export const getVideolistAll = async (page) => {
 //     try {
 //         const res = await httprequest.get(`videos?type=for-you&page=${page}`, {
@@ -45,6 +59,22 @@ export const postVideo = async (data) => {
     } catch (error) {
         toast.error('Đăng video thất bại');
 
+        console.log(error);
+    }
+};
+
+export const deleteVideo = async (id) => {
+    try {
+        const res = await httprequest.del(`videos/${id}`, {
+            headers: {
+                Authorization: `${localStorage.getItem(TOKEN)}`,
+            },
+        });
+        toast.success('Xoá thành công!');
+
+        return res.data;
+    } catch (error) {
+        toast.error('Xoá không thành công vui lòng kiểm tra lại');
         console.log(error);
     }
 };

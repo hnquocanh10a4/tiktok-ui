@@ -5,17 +5,19 @@ import DefaultLayout from '~/layouts';
 import PopUp from './components/PopUp/PopUp';
 import SignIn from './components/PopUp/SignIn/SignIn';
 import { useSelector, useDispatch } from 'react-redux';
-import { getLoadingSelector, getOpenLoginFormSelector } from './redux/selectors';
+import { getEditProfileFormSelector, getLoadingSelector, getOpenLoginFormSelector } from './redux/selectors';
 import SignUp from './components/PopUp/SignUp/SignUp';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import { TOKEN } from './untils/setting/configs';
 import { getFollowingList } from './redux/slice/followingSlice';
 import Loading from './components/Loading/Loading';
+import EditProfile from './components/PopUp/EditProfile/EditProfile';
 
 function App() {
     const loginform = useSelector(getOpenLoginFormSelector);
     const loading = useSelector(getLoadingSelector);
+    const editProfileForm = useSelector(getEditProfileFormSelector);
     const dispatch = useDispatch();
     useEffect(() => {
         if (localStorage.getItem(TOKEN)) {
@@ -28,7 +30,7 @@ function App() {
                 <>
                     <Loading hidden={!loading} />
                     <ToastContainer />
-                    <PopUp>{loginform ? <SignIn /> : <SignUp />}</PopUp>
+                    <PopUp>{editProfileForm ? <EditProfile /> : loginform ? <SignIn /> : <SignUp />}</PopUp>
                 </>
 
                 <Routes>

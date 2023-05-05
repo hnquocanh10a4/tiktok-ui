@@ -9,6 +9,7 @@ import { getVideolist } from '~/redux/slice/homeSlice';
 import PostItem from '../Home/PostItem/PostItem';
 import { getFollowingList } from '~/redux/slice/followingSlice';
 import authenticationSlice from '~/redux/slice/authenticationSlice';
+import { toast } from 'react-toastify';
 
 const cx = classNames.bind(styles);
 

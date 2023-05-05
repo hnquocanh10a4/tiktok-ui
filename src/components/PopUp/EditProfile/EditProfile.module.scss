@@ -1,0 +1,67 @@
+.container {
+    width: 600px;
+    padding: 10px 50px;
+}
+.content {
+    width: 100%;
+}
+
+.content-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 16px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #f1f1f2;
+}
+
+.content-wrap-title {
+    font-size: 1.7rem;
+    font-weight: 600;
+    flex: 1;
+}
+
+.content-wrap-info {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.content-avata {
+    height: 96px;
+    width: 96px;
+    border-radius: 100px;
+    cursor: pointer;
+}
+
+.content-input {
+    background-color: #f1f1f2;
+    width: 360px;
+    padding: 0 32px 0 16px;
+    height: 38px;
+}
+
+.content-area {
+    height: 104px;
+    resize: none;
+    padding: 16px 10px;
+    outline: none;
+    border: none;
+}
+
+.button-wrap {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.button-submit {
+    border-radius: 0;
+    margin: 10px 10px 20px 10px;
+}
+
+.error-title {
+    color: red;
+    font-style: italic;
+}

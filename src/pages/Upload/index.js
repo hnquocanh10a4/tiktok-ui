@@ -39,7 +39,7 @@ export default function Upload() {
                 }),
             );
             await navigate('/');
-            window.location.reload();
+            // window.location.reload();
         },
     });
     // console.log(inputFile.current.target, 'inputFile.current');

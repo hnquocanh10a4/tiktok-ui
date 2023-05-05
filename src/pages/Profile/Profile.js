@@ -8,12 +8,18 @@ import { faCheckCircle, faVideoSlash } from '@fortawesome/free-solid-svg-icons';
 import Button from '~/components/Button';
 import { LookIcon } from '~/components/Icon';
 import { useSelector, useDispatch } from 'react-redux';
-import { getCurrentUserSelector, getFollowingListSelector, getUsertByUserName } from '~/redux/selectors';
-import { getUserProfile } from '../../redux/slice/userSlice';
+import {
+    getCurrentUserSelector,
+    getFollowingListSelector,
+    getUsertByUserName,
+    getVideoLikedlistSelector,
+} from '~/redux/selectors';
+import { getUserProfile, getVideoLikedlistAction } from '../../redux/slice/userSlice';
 import Image from '~/components/Image/Image';
 import { followAction, unfollowAction } from '~/redux/slice/followingSlice';
 import { useNavigate } from 'react-router-dom';
 import authenticationSlice from '~/redux/slice/authenticationSlice';
+import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 
 const cx = classNames.bind(styles);
 
@@ -25,13 +31,17 @@ function Profile() {
     const dispatch = useDispatch();
     const location = useLocation();
     const navigate = useNavigate();
+    const [active, setActive] = useState(true);
 
     const currentUser = useSelector(getCurrentUserSelector);
+
+    const videoLikedList = useSelector(getVideoLikedlistSelector);
+
+    console.log(videoLikedList, 'videoLikedList');
 
     // console.log(location.pathname, 'location.pathname');
     // console.log(info, 'info');
 
-    const [active, setActive] = useState(true);
     // const [follow, setFollow] = useState(false);
     let follow = false;
     const followingList = useSelector(getFollowingListSelector);
@@ -44,7 +54,8 @@ function Profile() {
 
     useEffect(() => {
         dispatch(getUserProfile(location.pathname));
-    }, [location]);
+        dispatch(getVideoLikedlistAction(info.id));
+    }, [location, currentUser, active]);
 
     console.log('info', info);
     const handlePlay = (e) => {
@@ -66,19 +77,32 @@ function Profile() {
                         {info?.tick && <FontAwesomeIcon className={cx('check')} icon={faCheckCircle} />}
                     </p>
                     <span className={cx('name')}>{info?.full_name}</span>
-                    <Button
-                        primary
-                        className={cx('btn-follow', { primary: !follow, outline: follow })}
-                        onClick={() => {
-                            if (Object.keys(currentUser)?.length !== 0) {
-                                follow ? dispatch(unfollowAction(info.id)) : dispatch(followAction(info.id));
-                            } else {
+                    {info.id === currentUser.id ? (
+                        <Button
+                            rounded
+                            leftIcon={<FontAwesomeIcon icon={faPenToSquare} />}
+                            onClick={() => {
                                 dispatch(authenticationSlice.actions.openpopUpForm());
-                            }
-                        }}
-                    >
-                        {follow ? 'Unfollow' : 'Follow'}
-                    </Button>
+                                dispatch(authenticationSlice.actions.openEditProfileForm());
+                            }}
+                        >
+                            Edit Profile
+                        </Button>
+                    ) : (
+                        <Button
+                            primary
+                            className={cx('btn-follow', { primary: !follow, outline: follow })}
+                            onClick={() => {
+                                if (Object.keys(currentUser)?.length !== 0) {
+                                    follow ? dispatch(unfollowAction(info.id)) : dispatch(followAction(info.id));
+                                } else {
+                                    dispatch(authenticationSlice.actions.openpopUpForm());
+                                }
+                            }}
+                        >
+                            {follow ? 'Unfollow' : 'Follow'}
+                        </Button>
+                    )}
                 </div>
             </div>
             <div className={cx('follow-wrapper')}>
@@ -145,11 +169,36 @@ function Profile() {
                         })}
                     </div>
                 )
-            ) : (
+            ) : videoLikedList?.length === 0 ? (
                 <div className={cx('content')}>
                     <LookIcon />
                     <p className={cx('like-title')}>This user's liked videos are private</p>
                     <p className={cx('like-des')}>Videos liked by {info?.nickname} are currently hidden</p>
+                </div>
+            ) : (
+                <div className={cx('content-video')}>
+                    {videoLikedList?.map((video, index) => {
+                        return (
+                            // <Link to={`/@${video.user.nickname}/video/${video.uuid}`}>
+                            <video
+                                muted
+                                key={index}
+                                className={cx('video')}
+                                src={video.file_url}
+                                type="video/mp4"
+                                loop
+                                poster={video.thumb_url}
+                                onMouseOver={handlePlay}
+                                onMouseOut={handlePause}
+                                onClick={() => {
+                                    navigate(`/@${video.user.nickname}/video/${video.uuid}`, {
+                                        state: { from: 'likedPage' },
+                                    });
+                                }}
+                            ></video>
+                            // </Link>
+                        );
+                    })}
                 </div>
             )}
 
