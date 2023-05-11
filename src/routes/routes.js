@@ -10,6 +10,7 @@ import Search from '~/pages/Search/Search';
 import LogOut from '~/components/PopUp/LogOut/LogOut';
 import DetailVideo from '~/pages/DetailVideo/DetailVideo';
 import Following from '~/pages/Following';
+import NotFound from '~/pages/NotFound/NotFound';
 // import Live from '~/pages/Live';
 
 const publicRoutes = [
@@ -24,6 +25,7 @@ const publicRoutes = [
     { path: config.routes.upload, component: Upload, layout: HeaderOnly },
     { path: config.routes.search, component: Search, layout: null },
     { path: config.routes.logout, component: LogOut, layout: null },
+    { path: '*', component: NotFound, layout: null },
 ];
 
 const privateRoutes = [];

@@ -8,6 +8,8 @@ const Image = forwardRef(({ src, alt, className, fallback: customFallback = imag
     const [fallback, setFallback] = useState('');
 
     const handleError = () => {
+        console.log('loi');
+
         setFallback(customFallback);
     };
 

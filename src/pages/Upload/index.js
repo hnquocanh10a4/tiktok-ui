@@ -5,11 +5,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons';
 import Button from '~/components/Button/Button';
 import { useFormik } from 'formik';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { postVideoAction } from '~/redux/slice/uploadSlice';
 
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { getCurrentUserSelector } from '~/redux/selectors';
+import { useEffect } from 'react';
 
 const cx = classNames.bind(styles);
 
@@ -18,6 +20,8 @@ export default function Upload() {
     const [selectedVideo, setSelectedVideo] = useState(null);
     const [videoUrl, setVideoUrl] = useState('');
     const inputFile = useRef();
+
+    const currentUser = useSelector(getCurrentUserSelector); // user hiện tại
 
     const navigate = useNavigate();
 
@@ -44,6 +48,13 @@ export default function Upload() {
     });
     // console.log(inputFile.current.target, 'inputFile.current');
     // console.log(inputFile.current.value, 'inputFile.currentvalue');
+    useEffect(() => {
+        if (Object.keys(currentUser)?.length === 0) {
+            console.log('chua dk');
+            navigate('/');
+        }
+    }, [currentUser]);
+
     return (
         <div className={cx('container')}>
             <div className={cx('content')}>

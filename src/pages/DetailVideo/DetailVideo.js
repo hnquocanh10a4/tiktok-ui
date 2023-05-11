@@ -80,10 +80,12 @@ export default function DetailVideo() {
     let videoList = '';
 
     const currentUser = useSelector(getCurrentUserSelector); // user hiện tại
+    const userName = useSelector(getUsertByUserName);
     const videoListByPage = useSelector(getVideoListSelector); // list video từ home
     const videoListByUser = useSelector(getUsertByUserName).videos; // list video từ profile
     const videoListByUserLiked = useSelector(getVideoLikedlistSelector); // list video từ liked
-    console.log(videoListByUserLiked, 'videoListByUserLiked');
+
+    console.log(userName.id, 'userName');
 
     // tùy vào trang trước của người dùng gán list video phù hợp
     if (localStorage.getItem('prePage') === 'homePage') {
@@ -111,8 +113,8 @@ export default function DetailVideo() {
         }
     });
 
-    console.log(data, 'datadata');
-    console.log(videoListByUser, 'videoListByUser');
+    // console.log(data, 'datadata');
+    console.log(videoList, 'videoList');
 
     // kiểm tra có đang follow
     let follow = false;
@@ -126,11 +128,10 @@ export default function DetailVideo() {
     let stateHeart = data?.is_liked;
 
     useEffect(() => {
-        dispatch(getVideoLikedlistAction(currentUser.id));
-        dispatch(getVideolist());
         dispatch(getUserProfile(`/${userId}`));
+        dispatch(getVideolist(1));
         dispatch(getCommentByIdAction(videoId));
-    }, [dispatch, videoId, userId, currentUser]);
+    }, [dispatch, videoId, userId]);
 
     const handlePlay = () => {
         video.current.play();
@@ -153,7 +154,7 @@ export default function DetailVideo() {
             <div
                 className={cx('video-content')}
                 style={{
-                    backgroundImage: `url(${data.thumb_url})`,
+                    backgroundImage: `url(${data?.thumb_url})`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center center',
                 }}
@@ -166,23 +167,23 @@ export default function DetailVideo() {
                             if (localStorage.getItem('prePage') === 'homePage') {
                                 navigate('/');
                             } else {
-                                navigate(`/@${currentUser.nickname}`);
+                                navigate(`/@${data?.user?.nickname}`);
                             }
                         }}
                     />
                 </div>
-                <div className={cx('content')} key={data.id}>
+                <div className={cx('content')} key={data?.id}>
                     <div className={cx('video-player')}>
                         <video
                             ref={video}
                             className={cx('video')}
-                            src={data.file_url}
+                            src={data?.file_url}
                             type="video/mp4"
                             muted={volume === 0}
                             autoPlay
                             loop
                             playsInline
-                            poster={data.thumb_url}
+                            poster={data?.thumb_url}
                             onClick={() => {
                                 if (video.current.paused) {
                                     handlePlay();
@@ -412,7 +413,7 @@ export default function DetailVideo() {
                             <button className={cx('wrap-icon')}>
                                 <FontAwesomeIcon icon={faCommentDots} className={cx('icon')} />
                             </button>
-                            <span className={cx('quantity')}>{data.comments_count}</span>
+                            <span className={cx('quantity')}>{data?.comments_count}</span>
                         </div>
                     </div>
                     <div></div>
